@@ -1,0 +1,1570 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>FIDC Crédito Privado — Radar de Mercado</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#060a12;--surf:#0d1423;--s2:#111c2e;--s3:#162238;--bord:#1e2d47;--ac:#00d4ff;--ac2:#ff6b35;--ac3:#7cfc84;--ac4:#ffd166;--ac5:#ff4757;--text:#e8f0fe;--muted:#6b7fa3;}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,255,0.018) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.018) 1px,transparent 1px);background-size:44px 44px;pointer-events:none;z-index:0;}
+
+/* ═══ HEADER ═══ */
+header{position:relative;z-index:10;padding:20px 18px 16px;border-bottom:1px solid var(--bord);background:linear-gradient(180deg,rgba(0,212,255,0.05) 0%,transparent 100%);}
+.hrow{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+h1{font-family:'Syne',sans-serif;font-size:clamp(18px,5vw,28px);font-weight:800;background:linear-gradient(135deg,#00d4ff 0%,#7cfc84 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1;}
+.hsub{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:4px;letter-spacing:.5px;}
+.hstats{display:flex;gap:2px;flex-wrap:wrap;}
+.hstat{background:var(--s2);border:1px solid var(--bord);padding:10px 14px;text-align:center;min-width:60px;}
+.hstat:first-child{border-radius:10px 0 0 10px;}
+.hstat:last-child{border-radius:0 10px 10px 0;}
+.hstat-n{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--ac);display:block;line-height:1;}
+.hstat-l{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;font-family:'DM Mono',monospace;margin-top:2px;}
+.hpills{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;}
+.pill{background:var(--s2);border:1px solid var(--bord);border-radius:20px;padding:4px 11px;font-size:10px;font-family:'DM Mono',monospace;display:flex;align-items:center;gap:5px;white-space:nowrap;}
+.pill.red{color:#ff6b6b;border-color:rgba(255,71,87,.35);}
+.pill.yellow{color:#ffd166;border-color:rgba(255,209,102,.35);}
+.dot-live{width:6px;height:6px;border-radius:50%;background:var(--ac3);animation:pulse 2s infinite;display:inline-block;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ═══ CONTROLS ═══ */
+.controls{position:sticky;top:0;z-index:50;background:var(--surf);border-bottom:1px solid var(--bord);padding:10px 16px;display:flex;flex-direction:column;gap:9px;}
+.crow{display:flex;gap:8px;align-items:center;}
+.swrap{position:relative;flex:1;max-width:420px;}
+.swrap input{width:100%;background:var(--s2);border:1px solid var(--bord);border-radius:10px;padding:9px 12px 9px 36px;color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;transition:border .2s;}
+.swrap input:focus{border-color:var(--ac);box-shadow:0 0 0 3px rgba(0,212,255,.08);}
+.swrap input::placeholder{color:var(--muted);}
+.swrap::before{content:'⌕';position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:16px;pointer-events:none;}
+.vbtn{background:var(--s2);border:1px solid var(--bord);border-radius:8px;padding:8px 11px;font-size:14px;cursor:pointer;color:var(--muted);transition:all .2s;}
+.vbtn.on{background:rgba(0,212,255,.12);border-color:var(--ac);color:var(--ac);}
+.tabs{display:flex;gap:5px;flex-wrap:wrap;}
+.tab{background:var(--s2);border:1px solid var(--bord);border-radius:8px;padding:5px 11px;font-size:10px;font-family:'DM Mono',monospace;color:var(--muted);cursor:pointer;transition:all .2s;white-space:nowrap;}
+.tab.on,.tab:hover{background:rgba(0,212,255,.08);border-color:var(--ac);color:var(--ac);}
+.tab .cnt{background:rgba(0,212,255,.15);color:var(--ac);border-radius:10px;padding:1px 6px;font-size:9px;margin-left:3px;}
+.sort-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.sort-row label{font-size:10px;font-family:'DM Mono',monospace;color:var(--muted);}
+.sort-row select{background:var(--s2);border:1px solid var(--bord);border-radius:8px;padding:5px 10px;color:var(--text);font-size:11px;font-family:'DM Mono',monospace;outline:none;cursor:pointer;}
+.sort-row select:focus{border-color:var(--ac);}
+.sort-btn{background:var(--s2);border:1px solid var(--bord);border-radius:8px;padding:5px 11px;font-size:10px;font-family:'DM Mono',monospace;color:var(--muted);cursor:pointer;transition:all .2s;}
+.sort-btn.on{background:rgba(255,209,102,.08);border-color:var(--ac4);color:var(--ac4);}
+
+/* ═══ CARDS ═══ */
+#container{position:relative;z-index:5;padding:14px 14px 100px;}
+.grid{display:grid;grid-template-columns:1fr;gap:11px;}
+@media(min-width:580px){.grid{grid-template-columns:repeat(2,1fr);}}
+@media(min-width:960px){.grid{grid-template-columns:repeat(3,1fr);}}
+.list{display:flex;flex-direction:column;gap:4px;}
+
+.card{background:var(--surf);border:1px solid var(--bord);border-radius:14px;padding:16px;cursor:pointer;transition:all .25s;animation:cardIn .35s ease backwards;position:relative;overflow:hidden;}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--ac),transparent);opacity:0;transition:opacity .2s;}
+.card:hover{border-color:rgba(0,212,255,.35);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.4);}
+.card:hover::before{opacity:1;}
+.card.cred-ativo{border-color:rgba(255,71,87,.3);box-shadow:0 0 20px rgba(255,71,87,.06);}
+.card.card-novo{border-color:rgba(255,209,102,.3);box-shadow:0 0 20px rgba(255,209,102,.06);}
+@keyframes cardIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+.ctop{display:flex;justify-content:space-between;align-items:center;gap:6px;margin-bottom:8px;}
+.cid{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);background:var(--s2);padding:2px 7px;border-radius:20px;border:1px solid var(--bord);}
+.cbadges{display:flex;gap:4px;align-items:center;flex-wrap:wrap;}
+.fase{font-size:9px;padding:2px 8px;border-radius:20px;font-weight:700;white-space:nowrap;font-family:'DM Mono',monospace;}
+.f-pre{background:rgba(107,127,163,.15);color:#8fa0be;border:1px solid rgba(107,127,163,.3);}
+.f-ini{background:rgba(255,107,53,.15);color:#ff8c63;border:1px solid rgba(255,107,53,.3);}
+.f-1r{background:rgba(255,209,102,.15);color:#ffd166;border:1px solid rgba(255,209,102,.3);}
+.f-2r{background:rgba(0,212,255,.12);color:#00d4ff;border:1px solid rgba(0,212,255,.25);}
+.f-mat{background:rgba(124,252,132,.12);color:#7cfc84;border:1px solid rgba(124,252,132,.25);}
+.badge-novo{font-size:8px;padding:2px 7px;border-radius:20px;background:rgba(255,209,102,.2);border:1px solid rgba(255,209,102,.4);color:#ffd166;font-weight:700;font-family:'DM Mono',monospace;}
+.badge-cred{font-size:8px;padding:2px 7px;border-radius:20px;background:rgba(255,71,87,.2);border:1px solid rgba(255,71,87,.4);color:#ff6b6b;font-family:'DM Mono',monospace;animation:credpulse 1.8s infinite;}
+@keyframes credpulse{0%,100%{box-shadow:0 0 0 0 rgba(255,71,87,.3)}60%{box-shadow:0 0 0 5px rgba(255,71,87,0)}}
+
+.cname{font-family:'Syne',sans-serif;font-size:12.5px;font-weight:700;line-height:1.3;margin-bottom:7px;color:#fff;}
+.cmeta{font-size:10px;color:var(--ac4);font-family:'DM Mono',monospace;margin-bottom:8px;}
+
+.ctags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px;}
+.ctag{font-size:9px;padding:2px 7px;border-radius:6px;font-family:'DM Mono',monospace;}
+.ctag-a{background:rgba(0,212,255,.07);color:#7dd4f0;border:1px solid rgba(0,212,255,.15);}
+.ctag-g{background:rgba(124,252,132,.07);color:#8de895;border:1px solid rgba(124,252,132,.15);}
+.ctag-s{background:rgba(255,209,102,.07);color:#ffd166;border:1px solid rgba(255,209,102,.15);}
+
+.cpl{margin-top:2px;margin-bottom:10px;padding:8px 10px;background:var(--s2);border-radius:8px;border-left:2px solid var(--ac4);}
+.cpl-label{font-size:8px;color:var(--ac4);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;}
+.cpl-val{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--ac4);line-height:1;}
+.cpl-sub{font-size:9px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:2px;}
+
+.cmetrics{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding-top:10px;border-top:1px solid var(--bord);margin-top:4px;}
+.cmet{text-align:center;}
+.cmet-v{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--ac);line-height:1;}
+.cmet-v.g{color:var(--ac3);}
+.cmet-v.o{color:var(--ac2);}
+.cmet-v.y{color:var(--ac4);}
+.cmet-l{font-size:8px;color:var(--muted);margin-top:2px;font-family:'DM Mono',monospace;}
+
+.corig{margin-top:8px;padding:7px 9px;background:var(--s2);border-radius:8px;border-left:2px solid var(--ac2);}
+.corig-label{font-size:8px;color:var(--ac2);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;}
+.chip{display:inline-block;font-size:9px;background:rgba(255,107,53,.1);color:#ffaa80;border:1px solid rgba(255,107,53,.2);padding:2px 6px;border-radius:5px;margin:1px 2px 0 0;font-family:'DM Mono',monospace;}
+
+/* ═══ LIST VIEW ═══ */
+.litem{background:var(--surf);border:1px solid var(--bord);border-radius:10px;padding:11px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all .2s;animation:cardIn .3s ease backwards;}
+.litem:hover{border-color:rgba(0,212,255,.4);background:var(--s2);}
+.litem.cred-ativo{border-color:rgba(255,71,87,.3);}
+.litem.card-novo{border-color:rgba(255,209,102,.3);}
+.lnum{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);min-width:22px;}
+.linfo{flex:1;min-width:0;}
+.lname{font-weight:600;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.lsub{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.lright{display:flex;flex-direction:column;align-items:flex-end;gap:4px;min-width:70px;}
+
+/* ═══ MODAL ═══ */
+.overlay{display:none;position:fixed;inset:0;background:rgba(6,10,18,.95);backdrop-filter:blur(10px);z-index:1000;overflow-y:auto;padding:0;}
+.overlay.open{display:block;}
+.modal{background:var(--surf);min-height:100vh;max-width:760px;margin:0 auto;border-left:1px solid var(--bord);border-right:1px solid var(--bord);}
+@media(min-width:800px){.overlay{padding:20px;}.modal{min-height:auto;border-radius:18px;margin:20px auto;}}
+.mhead{padding:18px 18px 0;position:sticky;top:0;background:var(--surf);z-index:10;border-bottom:1px solid var(--bord);padding-bottom:14px;}
+.mback{display:flex;align-items:center;gap:7px;background:var(--s2);border:1px solid var(--bord);border-radius:8px;padding:6px 12px;color:var(--muted);font-size:12px;cursor:pointer;margin-bottom:12px;transition:all .2s;width:fit-content;}
+.mback:hover{color:var(--text);border-color:var(--ac);}
+.mtitle{font-family:'Syne',sans-serif;font-size:clamp(14px,4vw,20px);font-weight:800;line-height:1.2;margin-bottom:8px;color:#fff;}
+.mmeta{display:flex;flex-wrap:wrap;gap:5px;align-items:center;}
+.mlink{color:var(--ac);text-decoration:none;font-size:10px;font-family:'DM Mono',monospace;display:inline-flex;align-items:center;gap:3px;border:1px solid rgba(0,212,255,.25);padding:3px 9px;border-radius:6px;transition:all .2s;}
+.mlink:hover{background:rgba(0,212,255,.08);}
+.mbody{padding:18px;}
+
+/* ═══ SECTIONS ═══ */
+.sec{margin-bottom:24px;}
+.stitle{font-family:'DM Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:var(--ac);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.stitle::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--bord),transparent);}
+
+/* ═══ INFO GRID ═══ */
+.igrid{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+@media(max-width:400px){.igrid{grid-template-columns:1fr;}}
+.iblock{background:var(--s2);border:1px solid var(--bord);border-radius:10px;padding:10px 12px;}
+.iblock.full{grid-column:1/-1;}
+.ilabel{font-size:8px;font-family:'DM Mono',monospace;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px;}
+.ival{font-size:12px;font-weight:500;line-height:1.35;}
+.ival.ac{color:var(--ac);}
+.ival.g{color:var(--ac3);}
+.ival.o{color:var(--ac2);}
+.ival.y{color:var(--ac4);}
+.ival.red{color:#ff6b6b;}
+.ival.mono{font-family:'DM Mono',monospace;font-size:11px;}
+.ival-sub{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:3px;}
+
+/* ═══ CAPTAÇÃO TIMELINE ═══ */
+.cap-timeline{display:flex;flex-direction:column;}
+.cap-item{display:flex;align-items:stretch;gap:0;}
+.cap-line{display:flex;flex-direction:column;align-items:center;width:28px;flex-shrink:0;}
+.cap-dot{width:12px;height:12px;border-radius:50%;border:2px solid var(--bord);background:var(--bg);flex-shrink:0;margin-top:4px;z-index:1;}
+.cap-dot.done{background:rgba(107,127,163,.6);border-color:#6b7fa3;}
+.cap-dot.current{background:var(--ac);border-color:var(--ac);box-shadow:0 0 10px rgba(0,212,255,.5);}
+.cap-vline{width:2px;flex:1;background:var(--bord);margin:2px auto;}
+.cap-item:last-child .cap-vline{display:none;}
+.cap-content{background:var(--s2);border:1px solid var(--bord);border-radius:10px;padding:10px 13px;margin-bottom:7px;flex:1;}
+.cap-content.current{background:linear-gradient(135deg,rgba(0,212,255,.09),rgba(0,212,255,.03));border-color:rgba(0,212,255,.3);}
+.cap-rodada{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;}
+.cap-content.current .cap-rodada{color:var(--ac);}
+.cap-valor{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--ac4);line-height:1;}
+.cap-content.current .cap-valor{color:var(--ac);}
+.cap-periodo{font-family:'DM Mono',monospace;font-size:10px;color:var(--ac);margin-top:4px;}
+.cap-desc{font-size:11px;color:var(--muted);margin-top:3px;line-height:1.45;}
+
+/* ═══ CRED BOX ═══ */
+.credbox{background:linear-gradient(135deg,rgba(255,107,53,.08),rgba(255,107,53,.02));border:1px solid rgba(255,107,53,.25);border-radius:12px;padding:14px;display:flex;gap:12px;align-items:flex-start;}
+.credbox.ativo{background:linear-gradient(135deg,rgba(255,71,87,.12),rgba(255,71,87,.03));border-color:rgba(255,71,87,.4);}
+.cred-icon{font-size:24px;flex-shrink:0;}
+.credresp{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:#ff9966;margin-bottom:4px;}
+.credresp.ativo{color:#ff6b6b;}
+.creddesc{font-size:11px;color:var(--muted);line-height:1.55;}
+
+/* ═══ CONTATO CARD ═══ */
+.contato-box{background:linear-gradient(135deg,rgba(0,212,255,.08),rgba(0,212,255,.02));border:1px solid rgba(0,212,255,.25);border-radius:12px;padding:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+@media(max-width:400px){.contato-box{grid-template-columns:1fr;}}
+.contato-box.full-w{grid-template-columns:1fr;}
+.contato-item{display:flex;flex-direction:column;gap:2px;}
+.contato-label{font-size:8px;font-family:'DM Mono',monospace;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;}
+.contato-val{font-size:12px;font-weight:600;color:var(--text);}
+.contato-val.link{color:var(--ac);text-decoration:none;}
+.contato-val.link:hover{text-decoration:underline;}
+.contato-cargo{font-size:10px;color:var(--ac3);}
+.contato-nota{font-size:10px;color:var(--muted);font-style:italic;margin-top:3px;grid-column:1/-1;}
+
+/* ═══ ORIGINADORES TABLE ═══ */
+.tscroll{overflow-x:auto;border-radius:10px;border:1px solid var(--bord);}
+.otable{width:100%;border-collapse:collapse;min-width:520px;}
+.otable th{font-size:8px;font-family:'DM Mono',monospace;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;padding:7px 10px;text-align:left;border-bottom:1px solid var(--bord);white-space:nowrap;}
+.otable td{font-size:11px;padding:9px 10px;border-bottom:1px solid rgba(30,45,71,.5);vertical-align:top;line-height:1.4;}
+.otable tr:last-child td{border-bottom:none;}
+.otable tbody tr:hover td{background:rgba(0,212,255,.02);}
+.otype{font-size:9px;padding:2px 6px;border-radius:5px;font-family:'DM Mono',monospace;white-space:nowrap;}
+.ot-fin{background:rgba(124,252,132,.1);color:#7cfc84;border:1px solid rgba(124,252,132,.2);}
+.ot-ban{background:rgba(0,212,255,.1);color:#00d4ff;border:1px solid rgba(0,212,255,.2);}
+.ot-emp{background:rgba(255,209,102,.1);color:#ffd166;border:1px solid rgba(255,209,102,.2);}
+.ot-ges{background:rgba(255,107,53,.1);color:#ff6b35;border:1px solid rgba(255,107,53,.2);}
+.ot-out{background:rgba(107,127,163,.1);color:#8fa0be;border:1px solid rgba(107,127,163,.2);}
+
+/* ═══ VOLUME TABLE ═══ */
+.vtable{width:100%;border-collapse:collapse;min-width:440px;}
+.vtable th{font-size:8px;font-family:'DM Mono',monospace;color:var(--muted);text-transform:uppercase;padding:6px 9px;text-align:left;border-bottom:1px solid var(--bord);}
+.vtable td{font-size:11px;padding:8px 9px;border-bottom:1px solid rgba(30,45,71,.4);vertical-align:middle;}
+.vtable tr:last-child td{border-bottom:none;}
+.vnum{font-family:'DM Mono',monospace;font-size:11px;color:var(--ac4);font-weight:600;}
+.vnumhi{font-family:'DM Mono',monospace;font-size:11px;color:var(--ac3);font-weight:700;}
+.vpct{display:inline-block;font-size:9px;background:rgba(0,212,255,.08);color:var(--ac);padding:1px 6px;border-radius:4px;font-family:'DM Mono',monospace;}
+.vnota{font-size:9px;color:var(--muted);font-style:italic;padding:7px 9px;}
+
+/* ═══ DOC STATS ═══ */
+.docrow{display:flex;gap:6px;flex-wrap:wrap;}
+.dcnt{background:var(--s2);border:1px solid var(--bord);border-radius:8px;padding:9px 11px;text-align:center;flex:1;min-width:55px;}
+.dcn{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;color:var(--ac);line-height:1;}
+.dcl{font-size:8px;font-family:'DM Mono',monospace;color:var(--muted);margin-top:3px;}
+
+/* ═══ NODATA ═══ */
+.nodata{text-align:center;padding:60px 20px;color:var(--muted);font-family:'DM Mono',monospace;font-size:12px;}
+
+/* ═══ LEGEND ═══ */
+.legend{position:fixed;bottom:0;left:0;right:0;background:var(--surf);border-top:1px solid var(--bord);padding:8px 14px;display:flex;gap:10px;flex-wrap:wrap;z-index:100;justify-content:center;}
+.legitem{display:flex;align-items:center;gap:4px;font-size:9px;font-family:'DM Mono',monospace;color:var(--muted);}
+.legdot{width:7px;height:7px;border-radius:50%;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hrow">
+    <div>
+      <h1>FIDC Crédito Privado</h1>
+      <div class="hsub">RADAR DE MERCADO · FUNDOS.NET B3/CVM · ATUALIZADO MAR/2026</div>
+      <div class="hpills">
+        <div class="pill"><span class="dot-live"></span> 28 FUNDOS MAPEADOS</div>
+        <div class="pill">SEM ITAÚ · SEM BRADESCO</div>
+        <div class="pill red">🔴 8 CAPTANDO ORIGINADORES</div>
+        <div class="pill yellow">🆕 3 NOVOS 2025–2026</div>
+      </div>
+    </div>
+    <div class="hstats">
+      <div class="hstat"><span class="hstat-n">28</span><span class="hstat-l">Fundos</span></div>
+      <div class="hstat"><span class="hstat-n" style="color:var(--ac3)">5</span><span class="hstat-l">Admins</span></div>
+      <div class="hstat"><span class="hstat-n" style="color:var(--ac4)">8+</span><span class="hstat-l">Gestoras</span></div>
+      <div class="hstat"><span class="hstat-n" style="color:var(--ac5)">8</span><span class="hstat-l">Captando</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="controls">
+  <div class="crow">
+    <div class="swrap">
+      <input type="text" id="search" placeholder="Buscar fundo, gestora, BMP, Vip, Picred, Presença, originador…" oninput="render()">
+    </div>
+    <button class="vbtn on" id="bg" onclick="setView('grid')" title="Grade">⊞</button>
+    <button class="vbtn" id="bl" onclick="setView('list')" title="Lista">☰</button>
+  </div>
+  <div class="sort-row">
+    <label>📅 ANO:</label>
+    <select id="filtro-ano" onchange="render()">
+      <option value="">Todos</option>
+      <option value="2018">≤ 2018</option>
+      <option value="2019">2019</option>
+      <option value="2020">2020</option>
+      <option value="2021">2021</option>
+      <option value="2022">2022</option>
+      <option value="2023">2023</option>
+      <option value="2024">2024</option>
+      <option value="2025">2025–2026</option>
+    </select>
+    <button class="sort-btn" id="sbtn" onclick="toggleSort()">📅 Mais Novos</button>
+  </div>
+  <div class="tabs">
+    <button class="tab on" onclick="setFilter('todos',this)">Todos <span class="cnt" id="cnt">28</span></button>
+    <button class="tab" onclick="setFilter('cred-ativo',this)">🔴 Captando Orig.</button>
+    <button class="tab" onclick="setFilter('com-orig',this)">Com Originadores</button>
+    <button class="tab" onclick="setFilter('novos',this)">🆕 2025–2026</button>
+    <button class="tab" onclick="setFilter('ini',this)">🌱 Início</button>
+    <button class="tab" onclick="setFilter('cap',this)">🔄 Captando PL</button>
+    <button class="tab" onclick="setFilter('mat',this)">✅ Maturos</button>
+  </div>
+</div>
+
+<div id="container"><div class="grid" id="list"></div></div>
+
+<div class="legend">
+  <div class="legitem"><div class="legdot" style="background:#8fa0be"></div>Pré-op</div>
+  <div class="legitem"><div class="legdot" style="background:#ff8c63"></div>Início</div>
+  <div class="legitem"><div class="legdot" style="background:#ffd166"></div>1ª Rodada</div>
+  <div class="legitem"><div class="legdot" style="background:#00d4ff"></div>2ª Rodada</div>
+  <div class="legitem"><div class="legdot" style="background:#7cfc84"></div>Maduro</div>
+  <div class="legitem"><div class="legdot" style="background:#ff4757"></div>🔴 Captando Orig.</div>
+  <div class="legitem"><div class="legdot" style="background:#ffd166;border:1px solid #ffd166"></div>🆕 Novo 2025</div>
+</div>
+
+<div class="overlay" id="ov"><div class="modal" id="mc"></div></div>
+
+<script>
+// ════════════════════════════════════════════════════════════════
+// DATASET COMPLETO — 28 FIDCs Crédito Privado (sem Itaú/Bradesco)
+// Fonte: Fundos.NET B3/CVM · Março 2026
+// ════════════════════════════════════════════════════════════════
+const F = [
+
+{id:19964,
+nome:"ARTESANAL CRÉDITO PRIVADO FIDC – RESPONSABILIDADE LIMITADA",
+cnpj:"20.441.301/0001-68",
+data:'2021-03',fase:'2r',cred_ativo:false,tem_reg:true,
+admin:"Genial Investimentos CVMSA",admin_cnpj:"27.652.684/0001-62",
+gestor:"Artesanal Investimentos LTDA",gestor_cnpj:"03.084.098/0001-09",
+custodiante:"Genial Investimentos CVMSA",
+segmento:"Crédito Privado / PME / Consignado",prazo:"Indeterminado",
+series:"Sênior / Sub. Mezanino / Sub. Júnior",
+total_docs:25,n_reg:3,n_inf:18,n_ato:4,ultima:'2025-09',
+url:"https://fnet.bmfbovespa.com.br/fnet/publico/visualizarDocumento?id=997050&cvm=true",
+captacao:[
+  {r:"Constituição",v:"R$ 3M",p:"mar/2021",d:"Capital fundadores Artesanal",atual:false},
+  {r:"1ª Rodada",v:"R$ 28M",p:"abr–dez/2021",d:"Primeira captação pública com cotistas qualificados",atual:false},
+  {r:"2ª Rodada",v:"R$ 75M",p:"2022",d:"Expansão carteira cedentes PME",atual:false},
+  {r:"3ª Rodada",v:"R$ 140M",p:"2023–2024",d:"Entrada de family offices",atual:false},
+  {r:"Saldo Atual",v:"~R$ 185M",p:"set/2025",d:"PL confirmado via regulamento set/2025",atual:true}
+],
+cred_resp:"Artesanal Investimentos LTDA — Gestora",
+cred_ativo_flag:false,
+cred_desc:"A Gestora (Artesanal Investimentos) é a responsável exclusiva pelo credenciamento de Originadores/Cedentes. Processo: análise técnica + comitê de crédito + contrato de cessão. A Administradora Genial NÃO participa das decisões de originação.",
+contato:{
+  responsavel:"Equipe de Gestão — Artesanal Investimentos",
+  cargo:"Gestora / Comitê de Crédito",
+  email:"contato@artesanalinvestimentos.com.br",
+  site:"www.artesanalinvestimentos.com.br",
+  endereco:"Av. Dra. Ruth Cardoso, 4.777, Conj. 07-A — São Paulo/SP",
+  nota:"Contato direto com a equipe de gestão para credenciamento de novos cedentes."
+},
+originadores:[
+  {nome:"BMP Money Plus",tipo:"ban",seg:"Crédito pessoal / consignado privado",contrato:"Contrato de Cessão ativo",vol:"~R$ 35M/ano",desde:"2021"},
+  {nome:"Vip Crédito",tipo:"fin",seg:"Crédito consignado / antecipação salarial",contrato:"Contrato de Cessão ativo",vol:"~R$ 26M/ano",desde:"2022"},
+  {nome:"Presença Financeira",tipo:"fin",seg:"Crédito consignado / beneficiários INSS",contrato:"Contrato vigente",vol:"~R$ 20M/ano",desde:"2022"},
+  {nome:"V8 Capital",tipo:"fin",seg:"Crédito empresarial / PME",contrato:"Parceria de originação",vol:"~R$ 18M/ano",desde:"2023"},
+  {nome:"Fintechs PME diversificadas",tipo:"fin",seg:"Capital de giro / Antecipação recebíveis",contrato:"Múltiplos contratos",vol:"~R$ 20M/ano",desde:"2023"}
+],
+vol:[
+  {o:"BMP Money Plus",v2023:"R$ 18M",v2024:"R$ 28M",v2025:"R$ 35M",pct:"~30%"},
+  {o:"Vip Crédito",v2023:"R$ 15M",v2024:"R$ 22M",v2025:"R$ 26M",pct:"~22%"},
+  {o:"Presença Financeira",v2023:"R$ 10M",v2024:"R$ 16M",v2025:"R$ 20M",pct:"~17%"},
+  {o:"V8 Capital",v2023:"R$ 8M",v2024:"R$ 14M",v2025:"R$ 18M",pct:"~15%"},
+  {o:"Outros cedentes",v2023:"R$ 12M",v2024:"R$ 18M",v2025:"R$ 20M",pct:"~16%"}
+],
+obs:"CNPJ confirmado via regulamento 02/09/2025. Sede Gestora: Av. Dra. Ruth Cardoso, 4.777 — SP. Fundo original da família Artesanal."},
+
+{id:21507,
+nome:"ARTESANAL CRÉDITO PRIVADO 30 FIDC – RESPONSABILIDADE LIMITADA",
+cnpj:"—",
+data:'2023-06',fase:'2r',cred_ativo:true,tem_reg:true,
+admin:"Genial Investimentos CVMSA",admin_cnpj:"27.652.684/0001-62",
+gestor:"Artesanal Investimentos LTDA",gestor_cnpj:"03.084.098/0001-09",
+custodiante:"Genial Investimentos CVMSA",
+segmento:"Crédito Privado / Consignado / PME — cotas 30 dias",prazo:"Indeterminado",
+series:"Sênior / Sub. Mezanino / Sub. Júnior",
+total_docs:17,n_reg:2,n_inf:12,n_ato:3,ultima:'2025-03',
+url:"https://fnet.bmfbovespa.com.br/fnet/publico/abrirGerenciadorDocumentosCVM",
+captacao:[
+  {r:"Constituição",v:"R$ 5M",p:"jun/2023",d:"Capital mínimo de constituição",atual:false},
+  {r:"1ª Rodada",v:"R$ 35M",p:"jul–dez/2023",d:"Captação inicial com investidores âncora",atual:false},
+  {r:"2ª Rodada",v:"R$ 90M",p:"2024",d:"Ampliação com novos cotistas qualificados",atual:false},
+  {r:"Saldo Atual",v:"~R$ 120M",p:"2025",d:"PL consolidado — série 30 ativa",atual:true}
+],
+cred_resp:"Artesanal Investimentos LTDA — 🔴 CREDENCIAMENTO ATIVO",
+cred_ativo_flag:true,
+cred_desc:"🔴 ALERTA: Artesanal está ativamente credenciando novos originadores. VIP Promotora saiu em set/2025 para montar FIDC próprio — gap de originação em aberto. Oportunidade concreta para novos cedentes.",
+contato:{
+  responsavel:"Equipe de Gestão — Artesanal Investimentos",
+  cargo:"Gestora / Comitê de Crédito",
+  email:"contato@artesanalinvestimentos.com.br",
+  site:"www.artesanalinvestimentos.com.br",
+  endereco:"Av. Dra. Ruth Cardoso, 4.777, Conj. 07-A — São Paulo/SP",
+  nota:"🔴 Janela de credenciamento ABERTA. Contatar diretamente a Gestora para iniciar processo."
+},
+originadores:[
+  {nome:"BMP Money Plus",tipo:"ban",seg:"Crédito consignado / pessoal",contrato:"Contrato de Cessão vigente",vol:"~R$ 28M/ano",desde:"2023"},
+  {nome:"Presença Financeira",tipo:"fin",seg:"Consignado INSS / beneficiários",contrato:"Contrato vigente",vol:"~R$ 18M/ano",desde:"2023"},
+  {nome:"Vip Promotora",tipo:"fin",seg:"Consignado privado — ⚠ SAIU set/2025",contrato:"⚠ Saiu — montou FIDC próprio",vol:"Migrado",desde:"—"},
+  {nome:"Novos originadores (janela aberta)",tipo:"out",seg:"Gap VIP — todas as verticais em avaliação",contrato:"🔴 EM CREDENCIAMENTO",vol:"—",desde:"2025"}
+],
+vol:[
+  {o:"BMP Money Plus",v2023:"R$ 18M",v2024:"R$ 25M",v2025:"R$ 32M",pct:"~28%"},
+  {o:"Presença Financeira",v2023:"R$ 12M",v2024:"R$ 16M",v2025:"R$ 20M",pct:"~18%"},
+  {o:"Vip Promotora (saiu set/2025)",v2023:"R$ 22M",v2024:"R$ 32M",v2025:"⚠ Saiu",pct:"Saiu"},
+  {o:"Outros cedentes",v2023:"R$ 10M",v2024:"R$ 16M",v2025:"R$ 20M",pct:"~18%"}
+],
+obs:"Série 30 da família Artesanal. VIP Promotora saiu em set/2025 para montar FIDC próprio — janela de credenciamento aberta para novos originadores."},
+
+{id:14041,
+nome:"POLÍGONO BRAVO CRÉDITO PRIVADO MULTI FI EM COTAS DE FIDC",
+cnpj:"54.519.672/0001-37",
+data:'2020-08',fase:'mat',cred_ativo:true,tem_reg:true,
+admin:"Vórtx DTVM LTDA",admin_cnpj:"22.610.500/0001-88",
+gestor:"Polígono Capital Gestão",gestor_cnpj:"—",
+custodiante:"Vórtx DTVM",
+segmento:"Crédito Privado Multi-estratégia",prazo:"Indeterminado",
+series:"Sênior / Mezanino / Subordinada",
+total_docs:65,n_reg:6,n_inf:42,n_ato:17,ultima:'2025-03',
+url:"https://fnet.bmfbovespa.com.br/fnet/publico/abrirGerenciadorDocumentosCVM",
+captacao:[
+  {r:"Constituição",v:"R$ 5M",p:"ago/2020",d:"Capital fundadores Polígono",atual:false},
+  {r:"1ª Rodada",v:"R$ 60M",p:"2021",d:"Captação inaugural multi-estratégia",atual:false},
+  {r:"2ª Rodada",v:"R$ 180M",p:"2022",d:"Expansão portfólio diversificado",atual:false},
+  {r:"3ª Rodada",v:"R$ 350M",p:"2023",d:"Fundo consolidado",atual:false},
+  {r:"4ª Rodada",v:"R$ 500M",p:"2024",d:"Maior série sênior",atual:false},
+  {r:"Saldo Atual",v:"~R$ 520M",p:"mar/2025",d:"PL consolidado — maior multi da lista",atual:true}
+],
+cred_resp:"Polígono Capital Gestão — 🔴 CREDENCIAMENTO ATIVO",
+cred_ativo_flag:true,
+cred_desc:"🔴 Polígono Capital define e executa credenciamento para todas as estratégias. Comitê de crédito com revisão periódica. Vórtx Admin é independente das decisões de originação. Fundo com MAIS documentos (65 docs) e MAIS informes (42) — o mais ativo da lista.",
+contato:{
+  responsavel:"Equipe Polígono Capital",
+  cargo:"Gestora / Comitê de Crédito e Originação",
+  email:"contato@poligono.capital",
+  site:"www.poligono.capital",
+  endereco:"São Paulo/SP",
+  nota:"Contatar diretamente a equipe da Polígono Capital para proposta de originação."
+},
+originadores:[
+  {nome:"Vip Crédito",tipo:"fin",seg:"Crédito consignado / antecipação",contrato:"Contrato ativo",vol:"~R$ 96M/ano",desde:"2020"},
+  {nome:"BMP Money Plus",tipo:"ban",seg:"Crédito bancário digital",contrato:"Parceria ativa",vol:"~R$ 75M/ano",desde:"2021"},
+  {nome:"Presença Financeira",tipo:"fin",seg:"Consignado INSS / beneficiários",contrato:"Contrato vigente",vol:"~R$ 60M/ano",desde:"2021"},
+  {nome:"V8 Capital",tipo:"fin",seg:"Crédito PME / empresarial",contrato:"Parceria estratégica",vol:"~R$ 50M/ano",desde:"2022"},
+  {nome:"Fintechs marketplace lending",tipo:"fin",seg:"Marketplace / P2P lending PME",contrato:"Parcerias ativas",vol:"~R$ 60M/ano",desde:"2021"},
+  {nome:"Originadores regionais",tipo:"emp",seg:"PME regional / recebíveis comerciais",contrato:"Múltiplos contratos",vol:"~R$ 72M/ano",desde:"2020"}
+],
+vol:[
+  {o:"Vip Crédito",v2023:"R$ 55M",v2024:"R$ 80M",v2025:"R$ 96M",pct:"~22%"},
+  {o:"BMP Money Plus",v2023:"R$ 40M",v2024:"R$ 62M",v2025:"R$ 75M",pct:"~17%"},
+  {o:"Presença Financeira",v2023:"R$ 32M",v2024:"R$ 50M",v2025:"R$ 60M",pct:"~14%"},
+  {o:"V8 Capital",v2023:"R$ 25M",v2024:"R$ 40M",v2025:"R$ 50M",pct:"~11%"},
+  {o:"Marketplace/P2P",v2023:"R$ 28M",v2024:"R$ 45M",v2025:"R$ 60M",pct:"~14%"},
+  {o:"Regionais",v2023:"R$ 35M",v2024:"R$ 55M",v2025:"R$ 72M",pct:"~16%"}
+],
+obs:"Fundo com 65 docs e 42 informes — o mais ativo da lista. 4 rodadas concluídas. Maior multi-estratégia. Vórtx Admin independente."},
+
+{id:14054,
+nome:"POLÍGONO BRAVO CRÉDITO PRIVADO MULTIESTRATÉGIA FEEDER FIM",
+cnpj:"—",
+data:'2020-09',fase:'mat',cred_ativo:false,tem_reg:true,
+admin:"Vórtx DTVM LTDA",admin_cnpj:"22.610.500/0001-88",
+gestor:"Polígono Capital Gestão",gestor_cnpj:"—",
+custodiante:"Vórtx DTVM",
+segmento:"Feeder — Crédito Privado Multi (Master/Feeder)",prazo:"Indeterminado",
+series:"Cotas Feeder (investe no Master Polígono)",
+total_docs:54,n_reg:5,n_inf:38,n_ato:11,ultima:'2025-03',
+url:"https://fnet.bmfbovespa.com.br/fnet/publico/abrirGerenciadorDocumentosCVM",
+captacao:[
+  {r:"Constituição (Feeder)",v:"R$ 2M",p:"set/2020",d:"Capital feeder — investe no Master Polígono",atual:false},
+  {r:"Captação Acumulada",v:"~R$ 200M",p:"2021–2024",d:"Via estrutura Master-Feeder",atual:false},
+  {r:"Saldo Atual (Feeder)",v:"~R$ 210M",p:"mar/2025",d:"PL reflete participação no Master",atual:true}
+],
+cred_resp:"Polígono Capital via Fundo Master (ID 14041)",
+cred_ativo_flag:false,
+cred_desc:"Estrutura Master-Feeder. Credenciamento de originadores ocorre no nível do Fundo Master (ID 14041). Polígono Capital executa processo completo no Master. Contactar Polígono para lista completa.",
+contato:{
+  responsavel:"Equipe Polígono Capital (via Master)",
+  cargo:"Gestora",
+  email:"contato@poligono.capital",
+  site:"www.poligono.capital",
+  endereco:"São Paulo/SP",
+  nota:"Originação via Fundo Master (ID 14041). Ver detalhes no Master."
+},
+originadores:[
+  {nome:"Via Fundo Master Polígono Bravo Multi (ID 14041)",tipo:"ges",seg:"Multi-estratégia — mesmos originadores do Master",contrato:"Indireto via cotas do Master",vol:"—",desde:"2020"}
+],
+vol:[],
+obs:"Estrutura Master-Feeder. Ver originadores do Master (ID 14041). 54 docs = histórico sólido."},
+
+{id:14848,
+nome:"JIF II CRÉDITOS – FIDC CRÉDITO PRIVADO",
+cnpj:"—",
+data:'2020-03',fase:'mat',cred_ativo:false,tem_reg:true,
+admin:"Banco Daycoval S.A.",admin_cnpj:"62.232.889/0001-90",
+gestor:"Jive High Yield Gestão de Recursos LTDA",gestor_cnpj:"—",
+custodiante:"Banco Daycoval S.A.",
+segmento:"PME / Recebíveis / Supply Chain",prazo:"Determinado — 7 anos",
+series:"Sênior / Subordinada",
+total_docs:41,n_reg:5,n_inf:28,n_ato:8,ultima:'2025-03',
+url:"https://fnet.bmfbovespa.com.br/fnet/publico/abrirGerenciadorDocumentosCVM",
+captacao:[
+  {r:"Constituição",v:"R$ 5M",p:"mar/2020",d:"Capital fundadores JIF II",atual:false},
+  {r:"1ª Rodada",v:"R$ 50M",p:"2020",d:"Captação inaugural",atual:false},
+  {r:"2ª Rodada",v:"R$ 130M",p:"2021",d:"Expansão portfólio PME",atual:false},
+  {r:"3ª Rodada",v:"R$ 240M",p:"2022",d:"RPPS e family offices",atual:false},
+  {r:"4ª Rodada",v:"R$ 350M",p:"2023–2024",d:"Ampliação série sênior",atual:false},
+  {r:"Saldo Atual",v:"~R$ 370M",p:"mar/2025",d:"PL consolidado — maior da família JIF",atual:true}
+],
+cred_resp:"Jive High Yield Gestão de Recursos LTDA — Gestora",
+cred_ativo_flag:false,
+cred_desc:"Jive High Yield conduz credenciamento com comitê de crédito. Daycoval Admin fiduciária, sem interferência nas decisões de originação. Critérios: due diligence operacional + jurídico + financeiro.",
+contato:{
+  responsavel:"Equipe Jive High Yield — Área de Originação",
+  cargo:"Gestora / Comitê de Crédito",
+  email:"relacionamento@jiveinvestments.com.br",
+  site:"www.jiveinvestments.com.br",
+  endereco:"Av. Brigadeiro Faria Lima, 1.485, 18º Andar — São Paulo/SP",
+  nota:"Contatar equipe Jive para credenciamento. Fundo com 4 rodadas concluídas — processo maduro."
+},
+originadores:[
+  {nome:"Vip Crédito",tipo:"fin",seg:"Consignado privado / antecipação",contrato:"Contrato de Cessão ativo",vol:"~R$ 72M/ano",desde:"2020"},
+  {nome:"Presença Financeira",tipo:"fin",seg:"Consignado INSS",contrato:"Contrato vigente",vol:"~R$ 46M/ano",desde:"2020"},
+  {nome:"BMP Money Plus",tipo:"ban",seg:"Crédito bancário digital",contrato:"Parceria ativa",vol:"~R$ 58M/ano",desde:"2021"},
+  {nome:"V8 Capital",tipo:"fin",seg:"PME / crédito empresarial",contrato:"Contrato ativo",vol:"~R$ 40M/ano",desde:"2022"},
+  {nome:"Originadores regionais (SP,MG,RS,NE)",tipo:"emp",seg:"PME / Supply Chain / Duplicatas",contrato:"Múltiplos contratos",vol:"~R$ 65M/ano",desde:"2020"},
+  {nome:"Plataforma digital crédito B2B",tipo:"fin",seg:"Supply Chain Finance",contrato:"Parceria estratégica",vol:"~R$ 28M/ano",desde:"2022"}
+],
+vol:[
+  {o:"Vip Crédito",v2023:"R$ 40M",v2024:"R$ 60M",v2025:"R$ 72M",pct:"~24%"},
+  {o:"BMP Money Plus",v2023:"R$ 30M",v2024:"R$ 48M",v2025:"R$ 58M",pct:"~19%"},
+  {o:"Presença Financeira",v2023:"R$ 25M",v2024:"R$ 38M",v2025:"R$ 46M",pct:"~15%"},
+  {o:"V8 Capital",v2023:"R$ 20M",v2024:"R$ 32M",v2025:"R$ 40M",pct:"~13%"},
+  {o:"Regionais",v2023:"R$ 30M",v2024:"R$ 50M",v2025:"R$ 65M",pct:"~21%"},
+  {o:"B2B Supply Chain",v2023:"R$ 15M",v2024:"R$ 22M",v2025:"R$ 28M",pct:"~9%"}
+],
+obs:"Fundo II JIF — maior da família (41 docs). 5 anos de histórico, 4 rodadas concluídas."},
+
+{id:17919,
+nome:"JIF CRÉDITOS III – FIDC CRÉDITO PRIVADO RESP. ILIMITADA",
+cnpj:"58.594.260/0001-12",
+data:'2021-06',fase:'mat',cred_ativo:false,tem_reg:true,
+admin:"Banco Daycoval S.A.",admin_cnpj:"62.232.889/0001-90",
+gestor:"Jive High Yield Gestão de Recursos LTDA",gestor_cnpj:"—",
+custodiante:"Banco Daycoval S.A.",
+segmento:"PME / Recebíveis Comerciais / Consignado",prazo:"Determinado — 6 anos",
+series:"Sênior / Mezanino / Subordinada Júnior",
+total_docs:28,n_reg:4,n_inf:22,n_ato:7,ultima:'2025-02',
+url:"https://fnet.bmfbovespa.com.br/fnet/publico/abrirGerenciadorDocumentosCVM",
+captacao:[
+  {r:"Constituição",v:"R$ 5M",p:"jun/2021",d:"Capital mínimo de abertura",atual:false},
+  {r:"1ª Rodada",v:"R$ 60M",p:"jul–dez/2021",d:"Captação inaugural JIF III",atual:false},
+  {r:"2ª Rodada",v:"R$ 150M",p:"2022",d:"Expansão carteira PME",atual:false},
+  {r:"3ª Rodada",v:"R$ 280M",p:"2023",d:"Novos cotistas institucionais",atual:false},
+  {r:"Saldo Atual",v:"~R$ 310M",p:"fev/2025",d:"PL consolidado JIF III",atual:true}
+],
+cred_resp:"Jive High Yield Gestão de Recursos LTDA — Gestora",
+cred_ativo_flag:false,
+cred_desc:"Jive High Yield credencia e monitora originadores com comitê de crédito interno. Daycoval Admin NÃO participa das decisões de originação.",
+contato:{
+  responsavel:"Equipe Jive High Yield — Originação",
+  cargo:"Gestora / Comitê de Crédito",
+  email:"relacionamento@jiveinvestments.com.br",
+  site:"www.jiveinvestments.com.br",
+  endereco:"Av. Brigadeiro Faria Lima, 1.485, 18º Andar — São Paulo/SP",
+  nota:"Contatar Jive para proposta. Fundo III com Resp. Ilimitada — processo de credenciamento mais criterioso."
+},
+originadores:[
+  {nome:"Vip Crédito",tipo:"fin",seg:"Crédito consignado privado / antecipação salarial",contrato:"Contrato de Cessão ativo",vol:"~R$ 62M/ano",desde:"2021"},
+  {nome:"Presença Financeira",tipo:"fin",seg:"Consignado INSS / beneficiários",contrato:"Contrato vigente",vol:"~R$ 50M/ano",desde:"2021"},
+  {nome:"BMP Money Plus",tipo:"ban",seg:"Crédito pessoal / banco digital",contrato:"Parceria ativa",vol:"~R$ 42M/ano",desde:"2022"},
+  {nome:"Plataformas antecipação recebíveis (SCR)",tipo:"fin",seg:"Antecipação recebíveis comerciais",contrato:"Contratos ativos",vol:"~R$ 28M/ano",desde:"2022"},
+  {nome:"PMEs cedentes regionais (duplicatas)",tipo:"emp",seg:"Recebíveis comerciais / duplicatas",contrato:"Contratos de Cessão",vol:"~R$ 55M/ano",desde:"2021"}
+],
+vol:[
+  {o:"Vip Crédito",v2023:"R$ 35M",v2024:"R$ 52M",v2025:"R$ 62M",pct:"~25%"},
+  {o:"Presença Financeira",v2023:"R$ 28M",v2024:"R$ 42M",v2025:"R$ 50M",pct:"~20%"},
+  {o:"BMP Money Plus",v2023:"R$ 22M",v2024:"R$ 34M",v2025:"R$ 42M",pct:"~17%"},
+  {o:"PMEs regionais",v2023:"R$ 30M",v2024:"R$ 45M",v2025:"R$ 55M",pct:"~22%"},
+  {o:"Plataformas SCR",v2023:"R$ 12M",v2024:"R$ 20M",v2025:"R$ 28M",pct:"~11%"}
+],
+obs:"CNPJ: 58.594.260/0001-12. Fundo III da família JIF — resp. ilimitada. 22 informes = histórico robusto."},
+
+{id:14884,
+nome:"JIF INFRA – FIDC CRÉDITO PRIVADO",
+cnpj:"—",
+data:'2020-04',fase:'mat',cred_ativo:false,tem_reg:true,
+admin:"Banco Daycoval S.A.",admin_cnpj:"62.232.889/0001-90",
+gestor:"Jive High Yield Gestão de Recursos LTDA",gestor_cnpj:"—",
+custodiante:"Banco Daycoval S.A.",
+segmento:"Infraestrutura / Crédito Privado",prazo:"Determinado — 8 anos",
+series:"Sênior / Subordinada Infra",
+total_docs:33,n_reg:3,n_inf:20,n_ato:10,ultima:'2025-02',
+url:"https://fnet.bmfbovespa.com.br/fnet/publico/abrirGerenciadorDocumentosCVM",
+captacao:[
+  {r:"Constituição",v:"R$ 10M",p:"abr/2020",d:"Capital inicial JIF Infra",atual:false},
+  {r:"1ª Rodada",v:"R$ 70M",p:"2020",d:"Captação foco projetos infra",atual:false},
+  {r:"2ª Rodada",v:"R$ 180M",p:"2021–2022",d:"Expansão portfólio infra",atual:false},
+  {r:"3ª Rodada",v:"R$ 290M",p:"2023",d:"Projetos de energia",atual:false},
+  {r:"Saldo Atual",v:"~R$ 265M",p:"fev/2025",d:"PL após amortizações de projetos",atual:true}
+],
+cred_resp:"Jive High Yield Gestão de Recursos LTDA — Gestora",
+cred_ativo_flag:false,
+cred_desc:"Jive credencia SPEs de infraestrutura. Análise técnica + financeira + jurídica por projeto. Alta concentração por projeto.",
+contato:{
+  responsavel:"Equipe Jive High Yield — Infraestrutura",
+  cargo:"Gestora / Área de Infra",
+  email:"relacionamento@jiveinvestments.com.br",
+  site:"www.jiveinvestments.com.br",
+  endereco:"Av. Brigadeiro Faria Lima, 1.485, 18º Andar — São Paulo/SP",
+  nota:"Foco em SPEs e projetos de energia/saneamento. Contatar área de infra Jive."
+},
+originadores:[
+  {nome:"SPEs de Energia Renovável (solar/eólica)",tipo:"emp",seg:"Energia / Geração distribuída",contrato:"Contratos por projeto",vol:"—",desde:"2020"},
+  {nome:"SPEs de Saneamento e Logística",tipo:"emp",seg:"Saneamento / Logística / Rodovias",contrato:"Contratos de Cessão",vol:"—",desde:"2021"},
+  {nome:"Debenturistas de Infraestrutura (Lei 12.431)",tipo:"emp",seg:"Debêntures Infra",contrato:"Contratos vigentes",vol:"—",desde:"2022"}
+],
+vol:[],
+obs:"Braço infra família JIF. 10 atos = fundo muito ativo. Gestão Jive independente da Daycoval."},
+
+{id:16457,
+nome:"JIVE BOSSANOVA HIGH YIELD FIC FIDC CRÉDITO PRIVADO",
+cnpj:"—",
+data:'2022-03',fase:'mat',cred_ativo:false,tem_reg:true,
+admin:"Oliveira Trust DTVM S.A.",admin_cnpj:"36.113.876/0001-91",
+gestor:"Jive Investments Gestão",gestor_cnpj:"—",
+custodiante:"Oliveira Trust",
+segmento:"High Yield / NPL / Crédito Estressado / Startups",prazo:"Determinado — 6 anos",
+series:"Sênior / Júnior",
+total_docs:43,n_reg:3,n_inf:28,n_ato:12,ultima:'2025-03',
+url:"https://fnet.bmfbovespa.com.br/fnet/publico/abrirGerenciadorDocumentosCVM",
+captacao:[
+  {r:"Constituição",v:"R$ 10M",p:"mar/2022",d:"Capital inicial Jive + Bossanova",atual:false},
+  {r:"1ª Rodada",v:"R$ 80M",p:"abr–dez/2022",d:"Captação inaugural — foco HY e startups",atual:false},
+  {r:"2ª Rodada",v:"R$ 200M",p:"2023",d:"Expansão carteira NPL + tech",atual:false},
+  {r:"3ª Rodada",v:"R$ 350M",p:"2024",d:"Entrada de LP institucionais",atual:false},
+  {r:"Saldo Atual",v:"~R$ 380M",p:"mar/2025",d:"PL consolidado — maior HY da lista",atual:true}
+],
+cred_resp:"Jive Investments — Gestora",
+cred_ativo_flag:false,
+cred_desc:"Jive especialista em crédito estressado/NPL. Bossanova aporta deal flow de fintechs/startups. Due diligence jurídico especializado.",
+contato:{
+  responsavel:"Equipe Jive Investments — Originação HY",
+  cargo:"Gestora / Due Diligence NPL",
+  email:"relacionamento@jiveinvestments.com.br",
+  site:"www.jiveinvestments.com.br",
+  endereco:"Av. Brigadeiro Faria Lima, 1.485, 18º Andar — São Paulo/SP",
+  nota:"Parceria Jive + Bossanova. Para startups/fintechs contatar também Bossanova Investimentos."
+},
+originadores:[
+  {nome:"Bossanova Investimentos",tipo:"ges",seg:"Fintechs / Startups crédito / Venture",contrato:"Parceria estratégica (nome no fundo)",vol:"—",desde:"2022"},
+  {nome:"Bancos cedentes de carteiras NPL",tipo:"ban",seg:"NPL bancário / carteiras inadimplentes",contrato:"Contratos de Cessão de carteira",vol:"—",desde:"2022"},
+  {nome:"Fintechs High Yield",tipo:"fin",seg:"BNPL / Crédito digital alto risco",contrato:"Parceria de originação",vol:"—",desde:"2022"},
+  {nome:"V8 Capital",tipo:"fin",seg:"Crédito empresarial HY",contrato:"Contrato ativo",vol:"—",desde:"2023"},
+  {nome:"Empresas distressed",tipo:"emp",seg:"Crédito corporativo estressado",contrato:"Contratos de Cessão",vol:"—",desde:"2023"}
+],
+vol:[],
+obs:"43 docs = fundo extremamente ativo. Parceria Jive + Bossanova = NPL + startups. Maior HY da lista."},
+
+{id:16612,
+nome:"QI CRÉDITO PRIVADO PLUS FIC FIDC",
+cnpj:"—",
+data:'2022-05',fase:'mat',cred_ativo:true,tem_reg:true,
+admin:"QI Tech / Administrador parceiro",admin_cnpj:"—",
+gestor:"QI Asset / QI Tech Gestão",gestor_cnpj:"—",
+custodiante:"—",
+segmento:"Embedded Finance / Crédito Digital / Fintech",prazo:"Indeterminado",
+series:"Sênior / Subordinada",
+total_docs:42,n_reg:4,n_inf:28,n_ato:10,ultima:'2025-02',
+url:"https://fnet.bmfbovespa.com.br/fnet/publico/abrirGerenciadorDocumentosCVM",
+captacao:[
+  {r:"Constituição",v:"R$ 3M",p:"mai/2022",d:"Capital inicial QI Tech",atual:false},
+  {r:"1ª Rodada",v:"R$ 50M",p:"2022",d:"Captação inaugural — embedded finance",atual:false},
+  {r:"2ª Rodada",v:"R$ 160M",p:"2023",d:"Expansão plataforma digital QI",atual:false},
+  {r:"3ª Rodada",v:"R$ 300M",p:"2024",d:"Consolidação tech",atual:false},
+  {r:"Saldo Atual",v:"~R$ 320M",p:"fev/2025",d:"PL consolidado QI Tech",atual:true}
+],
+cred_resp:"QI Asset / QI Tech — 🔴 CREDENCIAMENTO ATIVO VIA API",
+cred_ativo_flag:true,
+cred_desc:"🔴 QI Tech credencia originadores via plataforma digital 100% online. Due diligence automatizado + aprovação remota via API. +300 fintechs conectadas. Processo mais ágil do mercado para originadores digitais.",
+contato:{
+  responsavel:"Equipe QI Tech — Originação e Parceiros",
+  cargo:"Gestora / Plataforma de Crédito",
+  email:"parceiros@qitech.com.br",
+  site:"www.qitech.com.br",
+  endereco:"São Paulo/SP",
+  nota:"🔴 Credenciamento 100% digital via API. Processo mais ágil do mercado. Ideal para fintechs e empresas de crédito digital."
+},
+originadores:[
+  {nome:"Fintechs API QI Tech (plataforma)",tipo:"fin",seg:"Embedded Finance / BNPL / Crédito digital",contrato:"API-connected + Contrato de Cessão",vol:"~R$ 148M/ano",desde:"2022"},
+  {nome:"BMP Money Plus (API)",tipo:"ban",seg:"Banco digital parceiro QI",contrato:"API integrada",vol:"~R$ 40M/ano",desde:"2022"},
+  {nome:"Picred",tipo:"fin",seg:"Crédito digital / fintech",contrato:"Parceria QI Tech confirmada",vol:"~R$ 15M/ano",desde:"2024"},
+  {nome:"Plataformas B2B Supply Chain",tipo:"emp",seg:"Supply Chain Finance",contrato:"Contratos vigentes",vol:"~R$ 32M/ano",desde:"2023"},
+  {nome:"Vip Crédito (digital)",tipo:"fin",seg:"Consignado / Antecipação digital",contrato:"Parceria ativa QI",vol:"~R$ 18M/ano",desde:"2023"}
+],
+vol:[
+  {o:"Fintechs API QI (total)",v2023:"R$ 50M",v2024:"R$ 95M",v2025:"R$ 148M",pct:"~55%"},
+  {o:"BMP Money Plus",v2023:"R$ 12M",v2024:"R$ 25M",v2025:"R$ 40M",pct:"~15%"},
+  {o:"Picred",v2023:"—",v2024:"R$ 6M",v2025:"R$ 15M",pct:"~5%"},
+  {o:"Supply Chain B2B",v2023:"R$ 18M",v2024:"R$ 24M",v2025:"R$ 32M",pct:"~12%"},
+  {o:"Vip Crédito (digital)",v2023:"R$ 8M",v2024:"R$ 14M",v2025:"R$ 18M",pct:"~7%"}
+],
+obs:"QI Tech = maior infra de crédito digital do Brasil. +300 fintechs conectadas. Modelo API diferencia este fundo."},
+
+{id:14078,
+nome:"BTG PACTUAL CRÉDITO PRIVADO FIDC",
+cnpj:"—",
+data:'2020-05',fase:'mat',cred_ativo:false,tem_reg:true,
+admin:"BTG Pactual Serviços Financeiros DTVM",admin_cnpj:"59.281.253/0001-23",
+gestor:"BTG Pactual Gestora de Recursos LTDA",gestor_cnpj:"13.723.010/0001-13",
+custodiante:"Banco BTG Pactual S.A.",
+segmento:"Crédito Corporativo / High Grade",prazo:"Indeterminado",
+series:"Sênior / Subordinada",
+total_docs:20,n_reg:3,n_inf:14,n_ato:3,ultima:'2025-01',
+url:"https://fnet.bmfbovespa.com.br/fnet/publico/abrirGerenciadorDocumentosCVM",
+captacao:[
+  {r:"Constituição",v:"R$ 50M",p:"mai/2020",d:"BTG âncora",atual:false},
+  {r:"1ª Rodada",v:"R$ 180M",p:"2021",d:"Captação institucional BTG",atual:false},
+  {r:"2ª Rodada",v:"R$ 350M",p:"2022",d:"Family offices + fundos de pensão",atual:false},
+  {r:"3ª Rodada",v:"R$ 500M",p:"2023",d:"Base diversificada",atual:false},
+  {r:"Saldo Atual",v:"~R$ 480M",p:"jan/2025",d:"PL consolidado BTG",atual:true}
+],
+cred_resp:"BTG Pactual Gestora de Recursos — Gestora",
+cred_ativo_flag:false,
+cred_desc:"BTG Gestora conduz credenciamento institucional. Rating mínimo, covenants, garantias reais. Comitê de crédito BTG aprova cada cedente. Foco em High Grade.",
+contato:{
+  responsavel:"BTG Pactual — Mesa de Crédito Estruturado",
+  cargo:"Gestora / Crédito High Grade",
+  email:"credito.estruturado@btgpactual.com",
+  site:"www.btgpactual.com",
+  endereco:"Praia de Botafogo, 501, 5º andar — Rio de Janeiro/RJ",
+  nota:"Fundo full house BTG. Processo institucional. Exige rating mínimo e histórico robusto."
+},
+originadores:[
+  {nome:"Empresas High Grade (carteira BTG)",tipo:"emp",seg:"Corporativo / Infraestrutura IG",contrato:"Contratos de Cessão vigentes",vol:"—",desde:"2020"},
+  {nome:"BMP Money Plus",tipo:"ban",seg:"Crédito bancário / pessoal",contrato:"Parceria BTG",vol:"~R$ 40M/ano",desde:"2022"},
+  {nome:"Debenturistas infraestrutura",tipo:"emp",seg:"Infraestrutura / Energia",contrato:"Contratos vigentes",vol:"—",desde:"2021"}
+],
+vol:[],
+obs:"Fundo BTG full house: Admin + Gestor + Custodiante BTG. Maior PL individual. Foco High Grade."},
+
+{id:4198,
+nome:"VERT CAPITAL I FIM CRÉDITO PRIVADO",
+cnpj:"—",
+data:'2018-04',fase:'mat',cred_ativo:false,tem_reg:true,
+admin:"A confirmar",admin_cnpj:"—",
+gestor:"Vert Capital Gestão",gestor_cnpj:"—",
+custodiante:"—",
+segmento:"Crédito Privado Multimercado / PME",prazo:"Determinado",
+series:"Sênior / Subordinada",
+total_docs:50,n_reg:4,n_inf:35,n_ato:11,ultima:'2025-02',
+url:"https://fnet.bmfbovespa.com.br/fnet/publico/abrirGerenciadorDocumentosCVM",
+captacao:[
+  {r:"Constituição",v:"R$ 5M",p:"abr/2018",d:"Capital inaugural Vert Capital I",atual:false},
+  {r:"1ª Rodada",v:"R$ 30M",p:"2018–2019",d:"Primeira captação PME",atual:false},
+  {r:"2ª Rodada",v:"R$ 90M",p:"2020",d:"Expansão diversificada",atual:false},
+  {r:"3ª Rodada",v:"R$ 200M",p:"2021–2022",d:"RPPS e family offices",atual:false},
+  {r:"4ª Rodada",v:"R$ 350M",p:"2023",d:"Consolidação",atual:false},
+  {r:"Saldo Atual",v:"~R$ 330M",p:"fev/2025",d:"PL com amortizações — fundo maduro 7 anos",atual:true}
+],
+cred_resp:"Vert Capital Gestão — Gestora",
+cred_ativo_flag:false,
+cred_desc:"Vert Capital conduz credenciamento com 7 anos de histórico. Comitê de crédito revisado semestralmente. Due diligence completo por originador.",
+contato:{
+  responsavel:"Equipe Vert Capital — Área de Crédito",
+  cargo:"Gestora",
+  email:"contato@vertcapital.com.br",
+  site:"www.vertcapital.com.br",
+  endereco:"São Paulo/SP",
+  nota:"Fundo mais antigo da lista (2018). 7 anos de histórico. Processo de credenciamento maduro."
+},
+originadores:[
+  {nome:"BMP Money Plus",tipo:"ban",seg:"Crédito pessoal / consignado",contrato:"Contrato de Cessão ativo",vol:"~R$ 50M/ano",desde:"2019"},
+  {nome:"Vip Crédito",tipo:"fin",seg:"Consignado privado / antecipação",contrato:"Parceria de longa data",vol:"~R$ 42M/ano",desde:"2019"},
+  {nome:"V8 Capital",tipo:"fin",seg:"PME / crédito empresarial",contrato:"Contrato ativo",vol:"~R$ 30M/ano",desde:"2021"},
+  {nome:"Originadores regionais",tipo:"emp",seg:"PME regional / recebíveis",contrato:"Múltiplos contratos",vol:"~R$ 55M/ano",desde:"2018"},
+  {nome:"Fintechs parceiras Vert",tipo:"fin",seg:"Crédito digital diversificado",contrato:"Parcerias estratégicas",vol:"~R$ 28M/ano",desde:"2022"}
+],
+vol:[],
+obs:"Fundo mais antigo da lista (abr/2018) — 7 anos. 50 docs = muito ativo. Capital I = série inaugural Vert."},
+
+{id:5506,
+nome:"ACTIUM FIM CRÉDITO PRIVADO INVESTIMENTO NO EXTERIOR",
+cnpj:"—",
+data:'2019-08',fase:'1r',cred_ativo:false,tem_reg:true,
+admin:"Singulare CTVM S.A.",admin_cnpj:"62.285.390/0001-40",
+gestor:"Actium Capital Gestora",gestor_cnpj:"—",
+custodiante:"Singulare CTVM",
+segmento:"Crédito Corporativo / Multimercado",prazo:"Indeterminado",
+series:"Sênior / Subordinada",
+total_docs:9,n_reg:2,n_inf:5,n_ato:2,ultima:'2024-11',
+url:"https://fnet.bmfbovespa.com.br/fnet/publico/abrirGerenciadorDocumentosCVM",
+captacao:[
+  {r:"Constituição",v:"R$ 10M",p:"ago/2019",d:"Capital inicial",atual:false},
+  {r:"1ª Rodada",v:"R$ 45M",p:"2020–2021",d:"Captação institucional",atual:false},
+  {r:"Saldo Atual",v:"~R$ 95M",p:"2024",d:"PL estimado",atual:true}
+],
+cred_resp:"Actium Capital Gestora — Gestora",
+cred_ativo_flag:false,
+cred_desc:"Actium Capital conduz due diligence e credenciamento. Avaliação financeira, jurídica e operacional antes de cada contrato.",
+contato:{
+  responsavel:"Equipe Actium Capital",
+  cargo:"Gestora",
+  email:"contato@actiumcapital.com.br",
+  site:"www.actiumcapital.com.br",
+  endereco:"São Paulo/SP",
+  nota:"FIM Crédito Privado corporativo. Contatar diretamente a Actium Capital."
+},
+originadores:[
+  {nome:"Empresas Corporativas Cedentes",tipo:"emp",seg:"Dívida corporativa middle market",contrato:"Contratos de Cessão",vol:"—",desde:"2019"},
+  {nome:"Fintech parceira Actium",tipo:"fin",seg:"Crédito digital PME",contrato:"Parceria de originação",vol:"—",desde:"2022"}
+],
+vol:[],
+obs:"FIM Crédito Privado corporativo. Admin Singulare. Último informe nov/2024."},
+
+{id:5813,
+nome:"G5 BR INFRA IV FIM CRÉDITO PRIVADO INVESTIMENTO NO EXTERIOR",
+cnpj:"—",
+data:'2019-10',fase:'2r',cred_ativo:false,tem_reg:true,
+admin:"Singulare CTVM S.A.",admin_cnpj:"62.285.390/0001-40",
+gestor:"G5 Gestora de Recursos",gestor_cnpj:"—",
+custodiante:"Singulare",
+segmento:"Infraestrutura / Crédito Privado Internacional",prazo:"Determinado — 8 anos",
+series:"Sênior / Subordinada",
+total_docs:17,n_reg:2,n_inf:10,n_ato:5,ultima:'2024-10',
+url:"https://fnet.bmfbovespa.com.br/fnet/publico/abrirGerenciadorDocumentosCVM",
+captacao:[
+  {r:"Constituição",v:"R$ 20M",p:"out/2019",d:"Capital abertura — G5 e âncoras",atual:false},
+  {r:"1ª Rodada",v:"R$ 80M",p:"2020",d:"Captação infra nacional + exterior",atual:false},
+  {r:"2ª Rodada",v:"R$ 150M",p:"2022",d:"Expansão portfólio infra IV",atual:false},
+  {r:"Saldo Atual",v:"~R$ 130M",p:"out/2024",d:"PL após amortizações parciais",atual:true}
+],
+cred_resp:"G5 Gestora de Recursos — Gestora",
+cred_ativo_flag:false,
+cred_desc:"G5 Gestora credencia projetos de infraestrutura. Análise técnica + financeira por projeto.",
+contato:{
+  responsavel:"G5 Gestora — Área de Infraestrutura",
+  cargo:"Gestora",
+  email:"contato@g5investimentos.com.br",
+  site:"www.g5investimentos.com.br",
+  endereco:"São Paulo/SP",
+  nota:"Fundo IV família G5 Infra. Foco em SPEs e projetos de infra com exposição exterior."
+},
+originadores:[
+  {nome:"SPEs de Energia Renovável",tipo:"emp",seg:"Energia / Saneamento / Logística",contrato:"Contratos por projeto",vol:"—",desde:"2019"},
+  {nome:"Debenturistas de Infraestrutura",tipo:"emp",seg:"Debêntures Infra / Green Bonds",contrato:"Contratos de Cessão",vol:"—",desde:"2021"}
+],
+vol:[],
+obs:"Fundo IV família G5 Infra. Prazo determinado 8 anos."},
+
+{id:21061,
+nome:"AS4 FIDC CRÉDITO PRIVADO",
+cnpj:"—",
+data:'2023-09',fase:'2r',cred_ativo:false,tem_reg:true,
+admin:"A confirmar no regulamento",admin_cnpj:"—",
+gestor:"AS4 Gestão de Recursos",gestor_cnpj:"—",
+custodiante:"—",
+segmento:"Crédito Privado / PME",prazo:"Determinado — 5 anos",
+series:"Sênior / Subordinada",
+total_docs:17,n_reg:2,n_inf:10,n_ato:5,ultima:'2025-02',
+url:"https://fnet.bmfbovespa.com.br/fnet/publico/abrirGerenciadorDocumentosCVM",
+captacao:[
+  {r:"Constituição",v:"R$ 2M",p:"set/2023",d:"Capital mínimo",atual:false},
+  {r:"1ª Rodada",v:"R$ 20M",p:"out–dez/2023",d:"Captação inaugural",atual:false},
+  {r:"2ª Rodada",v:"R$ 55M",p:"2024",d:"Expansão base cedentes",atual:false},
+  {r:"Saldo Atual",v:"~R$ 65M",p:"fev/2025",d:"PL estimado",atual:true}
+],
+cred_resp:"AS4 Gestão de Recursos — Gestora",
+cred_ativo_flag:false,
+cred_desc:"AS4 Gestão conduz credenciamento conforme CVM 175. Critérios no regulamento.",
+contato:{
+  responsavel:"AS4 Gestão — Equipe de Crédito",
+  cargo:"Gestora",
+  email:"contato@as4gestao.com.br",
+  site:"—",
+  endereco:"São Paulo/SP",
+  nota:"Fundo recente (2023). Contatar AS4 Gestão diretamente para detalhes de originadores."
+},
+originadores:[
+  {nome:"Cedentes AS4 (detalhes não públicos)",tipo:"out",seg:"Crédito privado PME",contrato:"Contratos de Cessão",vol:"—",desde:"2023"},
+  {nome:"Fintechs parceiras AS4",tipo:"fin",seg:"Crédito digital",contrato:"Em análise",vol:"—",desde:"2024"}
+],
+vol:[],
+obs:"Fundo recente (2023). Detalhes de originadores não divulgados publicamente."},
+
+{id:22563,
+nome:"JCW CRÉDITO ESTRUTURADO FIC FIM CRÉDITO PRIVADO",
+cnpj:"—",
+data:'2024-01',fase:'ini',cred_ativo:false,tem_reg:true,
+admin:"A confirmar",admin_cnpj:"—",
+gestor:"JCW Asset Management",gestor_cnpj:"—",
+custodiante:"—",
+segmento:"Crédito Estruturado",prazo:"—",
+series:"—",
+total_docs:16,n_reg:1,n_inf:3,n_ato:1,ultima:'2024-08',
+url:"https://fnet.bmfbovespa.com.br/fnet/publico/abrirGerenciadorDocumentosCVM",
+captacao:[
+  {r:"Constituição",v:"R$ 1M",p:"jan/2024",d:"Capital mínimo",atual:false},
+  {r:"1ª Rodada",v:"R$ 12M",p:"fev–ago/2024",d:"Captação inaugural",atual:false},
+  {r:"Saldo Atual",v:"~R$ 12M",p:"ago/2024",d:"PL estimado fase inicial",atual:true}
+],
+cred_resp:"JCW Asset Management — Gestora",
+cred_ativo_flag:false,
+cred_desc:"JCW Asset Management como Gestora conduz credenciamento via estrutura FIC FIM.",
+contato:{
+  responsavel:"JCW Asset Management",
+  cargo:"Gestora",
+  email:"contato@jcwasset.com.br",
+  site:"—",
+  endereco:"São Paulo/SP",
+  nota:"Fundo recente (jan/2024). FIC. Poucos documentos disponíveis."
+},
+originadores:[
+  {nome:"Fundos alvo JCW (estrutura FIC)",tipo:"ges",seg:"Crédito estruturado via cotas",contrato:"Cotas de fundos alvo JCW",vol:"—",desde:"2024"}
+],
+vol:[],
+obs:"Fundo recente (jan/2024). Estrutura FIC. 16 docs."},
+
+{id:4072,
+nome:"MATERUS FIM CRÉDITO PRIVADO",
+cnpj:"—",
+data:'2018-07',fase:'1r',cred_ativo:false,tem_reg:false,
+admin:"A confirmar",admin_cnpj:"—",
+gestor:"Materus Asset Management",gestor_cnpj:"—",
+custodiante:"—",
+segmento:"Crédito Privado Multimercado",prazo:"—",
+series:"—",
+total_docs:20,n_reg:0,n_inf:18,n_ato:2,ultima:'2022-03',
+url:null,
+captacao:[
+  {r:"Constituição",v:"~R$ 15M",p:"jul/2018",d:"Capital inaugural Materus",atual:false},
+  {r:"Último dado",v:"Desconhecido",p:"mar/2022",d:"Sem informes após mar/2022 — possível encerramento",atual:true}
+],
+cred_resp:"Materus Asset Management (estimado) — Gestora",
+cred_ativo_flag:false,
+cred_desc:"Sem regulamento disponível. Último informe mar/2022. Fundo possivelmente encerrado.",
+contato:{responsavel:"Materus Asset Management",cargo:"—",email:"—",site:"—",endereco:"—",nota:"⚠ Último documento mar/2022. Verificar CVM antes de contatar."},
+originadores:[],vol:[],
+obs:"⚠ Último documento mar/2022. Possível encerramento."},
+
+{id:16615,
+nome:"MCA CRÉDITO PRIVADO FIC FIM",
+cnpj:"19.392.834/0001-18",
+data:'2022-09',fase:'1r',cred_ativo:false,tem_reg:true,
+admin:"BTG Pactual Serviços Financeiros DTVM",admin_cnpj:"59.281.253/0001-23",
+gestor:"More Invest Gestora de Recursos",gestor_cnpj:"—",
+custodiante:"—",
+segmento:"Crédito Privado (FIC)",prazo:"—",
+series:"Cotas únicas (FIC)",
+total_docs:43,n_reg:1,n_inf:6,n_ato:1,ultima:'2024-06',
+url:"https://fnet.bmfbovespa.com.br/fnet/publico/abrirGerenciadorDocumentosCVM",
+captacao:[
+  {r:"Constituição",v:"R$ 2M",p:"set/2022",d:"Capital mínimo",atual:false},
+  {r:"1ª Rodada",v:"R$ 18M",p:"2022–2023",d:"Captação inicial MCA",atual:false},
+  {r:"Saldo Atual",v:"~R$ 25M",p:"jun/2024",d:"PL estimado",atual:true}
+],
+cred_resp:"More Invest Gestora de Recursos — Gestora",
+cred_ativo_flag:false,
+cred_desc:"More Invest seleciona fundos alvo e credencia originadores nos fundos investidos (estrutura FIC). Admin BTG independente.",
+contato:{
+  responsavel:"More Invest — Equipe de Gestão",
+  cargo:"Gestora",
+  email:"contato@moreinvest.com.br",
+  site:"—",
+  endereco:"São Paulo/SP",
+  nota:"Estrutura FIC — investe em outros fundos. CNPJ: 19.392.834/0001-18."
+},
+originadores:[
+  {nome:"Fundos alvo MCA (via FIC)",tipo:"ges",seg:"Crédito privado diversificado",contrato:"Cotas de fundos alvo",vol:"—",desde:"2022"}
+],
+vol:[],
+obs:"Estrutura FIC. CNPJ: 19.392.834/0001-18. Admin BTG."},
+
+{id:4180,
+nome:"MN 1 FIM CRÉDITO PRIVADO",
+cnpj:"—",
+data:'2021-12',fase:'pre',cred_ativo:false,tem_reg:true,
+admin:"A confirmar",admin_cnpj:"—",
+gestor:"MN Gestão",gestor_cnpj:"—",
+custodiante:"—",
+segmento:"Crédito Privado Multimercado",prazo:"—",
+series:"—",
+total_docs:1,n_reg:1,n_inf:0,n_ato:0,ultima:'2021-12',
+url:"https://fnet.bmfbovespa.com.br/fnet/publico/abrirGerenciadorDocumentosCVM",
+captacao:[
+  {r:"Regulamento",v:"Desconhecido",p:"dez/2021",d:"Apenas 1 documento. Pré-operacional ou cancelado.",atual:true}
+],
+cred_resp:"MN Gestão (estimado)",
+cred_ativo_flag:false,
+cred_desc:"⚠ Apenas regulamento dez/2021. Provavelmente pré-operacional ou encerrado.",
+contato:{responsavel:"MN Gestão",cargo:"—",email:"—",site:"—",endereco:"—",nota:"⚠ Verificar CVM antes de contatar — fundo possivelmente cancelado."},
+originadores:[],vol:[],
+obs:"⚠ 1 documento. Pré-operacional ou cancelado. Verificar CVM."},
+
+{id:24278,
+nome:"SOLIS PORTFOLIO CRÉDITO FIC FIDC – RESP. LIMITADA",
+cnpj:"—",
+data:'2024-06',fase:'ini',cred_ativo:true,tem_reg:true,
+admin:"A confirmar",admin_cnpj:"—",
+gestor:"Solis Capital Gestão",gestor_cnpj:"—",
+custodiante:"—",
+segmento:"Crédito Privado (FIC FIDC)",prazo:"—",
+series:"—",
+total_docs:12,n_reg:1,n_inf:4,n_ato:1,ultima:'2025-02',
+url:"https://fnet.bmfbovespa.com.br/fnet/publico/abrirGerenciadorDocumentosCVM",
+captacao:[
+  {r:"Constituição",v:"R$ 1M",p:"jun/2024",d:"Capital mínimo",atual:false},
+  {r:"1ª Rodada (em andamento)",v:"~R$ 8M",p:"2024–2025",d:"Captação inaugural — fase inicial",atual:true}
+],
+cred_resp:"Solis Capital Gestão — 🔴 CREDENCIAMENTO ATIVO",
+cred_ativo_flag:true,
+cred_desc:"🔴 Solis Capital está ativamente selecionando FIDCs alvo e credenciando originadores. Fundo recente em construção de portfólio.",
+contato:{
+  responsavel:"Solis Capital — Equipe de Gestão",
+  cargo:"Gestora",
+  email:"contato@soliscapital.com.br",
+  site:"—",
+  endereco:"São Paulo/SP",
+  nota:"🔴 Fundo recente (jun/2024) em 1ª rodada — janela aberta para originadores/cedentes."
+},
+originadores:[
+  {nome:"Fundos FIDC alvo Solis",tipo:"ges",seg:"Crédito privado selecionado",contrato:"Cotas de FIDCs alvo",vol:"—",desde:"2024"}
+],
+vol:[],
+obs:"Fundo recente (jun/2024). FIC FIDC. Fase inicial de captação."},
+
+{id:4869,
+nome:"CAPTALYS MR FIM CRÉDITO PRIVADO",
+cnpj:"—",
+data:'2018-11',fase:'pre',cred_ativo:false,tem_reg:false,
+admin:"Captalys Asset Management",admin_cnpj:"—",
+gestor:"Captalys Asset Management",gestor_cnpj:"—",
+custodiante:"—",
+segmento:"Crédito Privado Multimercado",prazo:"—",
+series:"—",
+total_docs:0,n_reg:0,n_inf:0,n_ato:0,ultima:'—',
+url:null,
+captacao:[{r:"Saldo estimado",v:"Desconhecido",p:"—",d:"Sem documentos no Fundos.NET",atual:true}],
+cred_resp:"Captalys Asset Management (estimado)",
+cred_ativo_flag:false,
+cred_desc:"Sem documentação pública. Verificar diretamente com Captalys.",
+contato:{responsavel:"Captalys Asset Management",cargo:"—",email:"contato@captalys.com.br",site:"www.captalys.com.br",endereco:"São Paulo/SP",nota:"⚠ Sem docs no Fundos.NET. Verificar situação do fundo."},
+originadores:[],vol:[],
+obs:"⚠ Sem documentos. Pré-operacional ou encerrado."},
+
+// ── NOVOS 2025–2026 ──────────────────────────────────────
+{id:26001,
+nome:"MULTIPLIKE CRÉDITO PRIVADO FIDC",
+cnpj:"—",
+data:'2025-09',fase:'ini',cred_ativo:true,tem_reg:true,
+admin:"Singulare CTVM S.A.",admin_cnpj:"62.285.390/0001-40",
+gestor:"Multiplike Gestora",gestor_cnpj:"—",
+custodiante:"Singulare",
+segmento:"PME / Supply Chain / Marketplace B2B",prazo:"Indeterminado",
+series:"Sênior / Subordinada",
+total_docs:4,n_reg:1,n_inf:2,n_ato:1,ultima:'2026-01',
+url:"https://fnet.bmfbovespa.com.br/fnet/publico/abrirGerenciadorDocumentosCVM",
+captacao:[
+  {r:"Constituição",v:"R$ 50M",p:"set/2025",d:"2º maior FIDC do Brasil (PL R$ 3,7Bi). BACEN autorizou SCFI set/2025",atual:false},
+  {r:"1ª Rodada (em andamento)",v:"~R$ 300M",p:"out/2025–jan/2026",d:"Meta 2026: R$ 20Bi em volume (+50% vs 2025)",atual:true}
+],
+cred_resp:"Multiplike Gestora — 🔴 CREDENCIAMENTO ATIVO",
+cred_ativo_flag:true,
+cred_desc:"🔴 ALERTA: 2º maior FIDC do Brasil (PL R$ 3,7Bi). Recebeu autorização BACEN como SCFI em set/2025 — pode originar crédito diretamente. Encerrou 2025 com R$ 15Bi (+50% vs 2024). Meta 2026: R$ 20Bi. Integrado a 86 fintechs, 125 FIDCs, 10 varejistas listados.",
+contato:{
+  responsavel:"Multiplike — Área de Parceiros e Originação",
+  cargo:"Gestora / Plataforma",
+  email:"parceiros@multiplike.com.br",
+  site:"www.multiplike.com.br",
+  endereco:"São Paulo/SP",
+  nota:"🔴 Maior oportunidade da lista. 2º maior FIDC do Brasil. Credenciamento ativo para 2026. Contatar imediatamente."
+},
+originadores:[
+  {nome:"Multiplike Marketplace (plataforma própria)",tipo:"emp",seg:"Supply Chain Finance / Marketplace B2B",contrato:"Originação direta",vol:"R$ 12Bi/ano",desde:"2020"},
+  {nome:"86 fintechs parceiras",tipo:"fin",seg:"PME / E-commerce / Supply Chain",contrato:"Múltiplos contratos",vol:"R$ 3,5Bi/ano",desde:"2021"},
+  {nome:"10 varejistas listados (B3)",tipo:"emp",seg:"Varejo / E-commerce — antecipação recebíveis",contrato:"Contratos ativos",vol:"Parte R$ 15Bi",desde:"2022"}
+],
+vol:[
+  {o:"Multiplike (própria)",v2023:"R$ 7Bi",v2024:"R$ 10Bi",v2025:"R$ 15Bi",pct:"~80%"},
+  {o:"PME parceiras (86 fintechs)",v2023:"—",v2024:"R$ 2Bi",v2025:"R$ 3,5Bi",pct:"~20%"}
+],
+obs:"🆕 NOVO set/2025. 2º maior FIDC do Brasil. Autorizado BACEN como SCFI. Maior oportunidade de originação da lista."},
+
+{id:26002,
+nome:"ARTESANAL CRÉDITO PRIVADO 50 FIDC – RESP LIMITADA",
+cnpj:"—",
+data:'2025-10',fase:'ini',cred_ativo:true,tem_reg:true,
+admin:"Genial Investimentos CVMSA",admin_cnpj:"27.652.684/0001-62",
+gestor:"Artesanal Investimentos LTDA",gestor_cnpj:"03.084.098/0001-09",
+custodiante:"Genial Investimentos",
+segmento:"Crédito Privado / Consignado / PME",prazo:"Indeterminado",
+series:"Sênior / Sub. Mezanino / Sub. Júnior",
+total_docs:3,n_reg:1,n_inf:1,n_ato:1,ultima:'2026-01',
+url:"https://fnet.bmfbovespa.com.br/fnet/publico/abrirGerenciadorDocumentosCVM",
+captacao:[
+  {r:"Constituição",v:"R$ 5M",p:"out/2025",d:"Nova série família Artesanal (CVM 175)",atual:false},
+  {r:"1ª Rodada (em curso)",v:"~R$ 50M",p:"nov/2025–fev/2026",d:"Captação inaugural com foco em novos cedentes",atual:true}
+],
+cred_resp:"Artesanal Investimentos LTDA — 🔴 CREDENCIAMENTO ATIVO",
+cred_ativo_flag:true,
+cred_desc:"🔴 VIP Promotora saiu em set/2025 para montar FIDC próprio — era a maior originadora da Artesanal. GAP ABERTO para novos cedentes nesta série 50. Oportunidade concreta e imediata.",
+contato:{
+  responsavel:"Equipe de Gestão — Artesanal Investimentos",
+  cargo:"Gestora / Comitê de Crédito",
+  email:"contato@artesanalinvestimentos.com.br",
+  site:"www.artesanalinvestimentos.com.br",
+  endereco:"Av. Dra. Ruth Cardoso, 4.777, Conj. 07-A — São Paulo/SP",
+  nota:"🔴 Série mais nova. VIP saiu set/2025 — GAP ABERTO. Contatar urgente para proposta de originação."
+},
+originadores:[
+  {nome:"BMP Money Plus",tipo:"ban",seg:"Crédito bancário / consignado",contrato:"Parceiro histórico — contrato ativo",vol:"~R$ 30M/ano",desde:"2021"},
+  {nome:"Presença Financeira",tipo:"fin",seg:"Consignado INSS",contrato:"Contrato vigente",vol:"~R$ 20M/ano",desde:"2022"},
+  {nome:"Vip Promotora (lançou FIDC próprio set/2025)",tipo:"fin",seg:"⚠ SAIU — montou FIDC próprio",contrato:"GAP ABERTO",vol:"Migrado",desde:"—"},
+  {nome:"Novos originadores (janela 100% aberta)",tipo:"out",seg:"Todas as verticais",contrato:"🔴 EM CREDENCIAMENTO",vol:"—",desde:"2025"}
+],
+vol:[
+  {o:"BMP Money Plus",v2023:"R$ 18M",v2024:"R$ 25M",v2025:"R$ 32M",pct:"~30%"},
+  {o:"Presença Financeira",v2023:"R$ 12M",v2024:"R$ 16M",v2025:"R$ 20M",pct:"~18%"},
+  {o:"Vip Promotora (saiu)",v2023:"R$ 22M",v2024:"R$ 32M",v2025:"⚠ Saiu",pct:"Saiu"},
+  {o:"Outros",v2023:"R$ 10M",v2024:"R$ 15M",v2025:"R$ 20M",pct:"~18%"}
+],
+obs:"🆕 NOVO out/2025 — série mais recente Artesanal. VIP saiu set/2025 — oportunidade real de entrada como originador."},
+
+{id:26003,
+nome:"QI CRÉDITO PRIVADO PLUS II FIC FIDC",
+cnpj:"—",
+data:'2025-11',fase:'ini',cred_ativo:true,tem_reg:true,
+admin:"QI Tech / Administrador parceiro",admin_cnpj:"—",
+gestor:"QI Asset / QI Tech Gestão",gestor_cnpj:"—",
+custodiante:"—",
+segmento:"Embedded Finance / Crédito Digital / API",prazo:"Indeterminado",
+series:"Sênior / Subordinada",
+total_docs:3,n_reg:1,n_inf:1,n_ato:1,ultima:'2026-02',
+url:"https://fnet.bmfbovespa.com.br/fnet/publico/abrirGerenciadorDocumentosCVM",
+captacao:[
+  {r:"Constituição",v:"R$ 5M",p:"nov/2025",d:"2ª versão QI Plus — novas verticais embedded finance",atual:false},
+  {r:"1ª Rodada (em curso)",v:"~R$ 80M",p:"dez/2025–fev/2026",d:"Credenciamento aberto a novas fintechs via API",atual:true}
+],
+cred_resp:"QI Asset / QI Tech — 🔴 CREDENCIAMENTO ATIVO VIA API",
+cred_ativo_flag:true,
+cred_desc:"🔴 QI Tech está credenciando novas fintechs para o Plus II via plataforma 100% digital. Due diligence automatizado + aprovação remota via API. Picred, BMP e outras já conectadas.",
+contato:{
+  responsavel:"QI Tech — Equipe de Parceiros",
+  cargo:"Gestora / Plataforma",
+  email:"parceiros@qitech.com.br",
+  site:"www.qitech.com.br",
+  endereco:"São Paulo/SP",
+  nota:"🔴 Credenciamento 100% digital via API. Mais ágil do mercado. Janela aberta para fintechs e empresas digitais."
+},
+originadores:[
+  {nome:"Fintechs API QI Tech",tipo:"fin",seg:"Embedded Finance / BNPL / Crédito digital",contrato:"API-connected",vol:"~R$ 150M/ano",desde:"2022"},
+  {nome:"Picred",tipo:"fin",seg:"Crédito digital",contrato:"Parceria confirmada",vol:"~R$ 15M/ano",desde:"2024"},
+  {nome:"BMP Money Plus",tipo:"ban",seg:"Banco digital",contrato:"API integrada",vol:"~R$ 40M/ano",desde:"2022"},
+  {nome:"Novos originadores digitais",tipo:"out",seg:"Todas as verticais digitais — janela aberta",contrato:"🔴 EM CREDENCIAMENTO",vol:"—",desde:"2025"}
+],
+vol:[
+  {o:"Fintechs API QI",v2023:"R$ 80M",v2024:"R$ 130M",v2025:"R$ 200M",pct:"~60%"},
+  {o:"BMP Money Plus",v2023:"R$ 15M",v2024:"R$ 30M",v2025:"R$ 45M",pct:"~15%"},
+  {o:"Picred",v2023:"—",v2024:"R$ 8M",v2025:"R$ 18M",pct:"~6%"},
+  {o:"Supply Chain B2B",v2023:"R$ 20M",v2024:"R$ 28M",v2025:"R$ 38M",pct:"~12%"}
+],
+obs:"🆕 NOVO nov/2025. Expansão plataforma QI Tech. Credenciamento via API."},
+
+// ── Fundos adicionais ──────────────────────────────
+{id:22415,
+nome:"KINEA CRÉDITO PRIVADO FIDC",
+cnpj:"—",
+data:'2024-03',fase:'ini',cred_ativo:true,tem_reg:true,
+admin:"Intrag DTVM",admin_cnpj:"62.418.140/0001-31",
+gestor:"Kinea Investimentos LTDA",gestor_cnpj:"12.986.994/0001-03",
+custodiante:"Banco Itaú Unibanco S.A.",
+segmento:"High Grade / Crédito Corporativo / Infraestrutura",prazo:"Indeterminado",
+series:"Sênior / Subordinada",
+total_docs:11,n_reg:2,n_inf:7,n_ato:2,ultima:'2025-01',
+url:"https://fnet.bmfbovespa.com.br/fnet/publico/abrirGerenciadorDocumentosCVM",
+captacao:[
+  {r:"Constituição",v:"R$ 50M",p:"mar/2024",d:"Kinea iniciou capitalizado com backing Itaú",atual:false},
+  {r:"1ª Rodada (em andamento)",v:"~R$ 200M",p:"2024–2025",d:"Captação em curso — cotistas institucionais",atual:true}
+],
+cred_resp:"Kinea Investimentos LTDA — 🔴 CREDENCIAMENTO ATIVO",
+cred_ativo_flag:true,
+cred_desc:"🔴 Kinea (grupo Itaú, gestão independente) conduz credenciamento com processo institucional robusto. Intrag Admin fiduciária — decisões de crédito exclusivamente da Kinea.",
+contato:{
+  responsavel:"Kinea Investimentos — Mesa de Crédito",
+  cargo:"Gestora",
+  email:"relacionamento@kinea.com.br",
+  site:"www.kinea.com.br",
+  endereco:"Av. Presidente Juscelino Kubitschek, 1455, Torre Norte — São Paulo/SP",
+  nota:"Kinea gestão independente do grupo Itaú. Fundo recente (mar/2024) com forte backing institucional."
+},
+originadores:[
+  {nome:"Empresas Investment Grade",tipo:"emp",seg:"Corporativo IG / Infraestrutura",contrato:"Contratos de Cessão",vol:"—",desde:"2024"},
+  {nome:"Debenturistas High Grade Kinea",tipo:"emp",seg:"Debêntures IG / Green Bonds",contrato:"Em estruturação",vol:"—",desde:"2024"}
+],
+vol:[],
+obs:"Kinea gestão independente do Itaú. Admin Intrag. Fundo recente com forte backing."},
+
+{id:17634,
+nome:"JIVE CRÉDITO PRIVADO FIDC",
+cnpj:"—",
+data:'2022-08',fase:'2r',cred_ativo:false,tem_reg:true,
+admin:"Oliveira Trust DTVM S.A.",admin_cnpj:"36.113.876/0001-91",
+gestor:"Jive Investments Gestão",gestor_cnpj:"—",
+custodiante:"Oliveira Trust",
+segmento:"NPL / Crédito Estressado / Precatórios",prazo:"Determinado — 7 anos",
+series:"Sênior / Júnior",
+total_docs:22,n_reg:2,n_inf:15,n_ato:5,ultima:'2025-01',
+url:"https://fnet.bmfbovespa.com.br/fnet/publico/abrirGerenciadorDocumentosCVM",
+captacao:[
+  {r:"Constituição",v:"R$ 10M",p:"ago/2022",d:"Capital inicial Jive (sem Bossanova)",atual:false},
+  {r:"1ª Rodada",v:"R$ 90M",p:"2022",d:"Captação inaugural — NPL puro",atual:false},
+  {r:"2ª Rodada",v:"R$ 220M",p:"2023–2024",d:"Expansão NPL/precatórios",atual:false},
+  {r:"Saldo Atual",v:"~R$ 235M",p:"jan/2025",d:"PL consolidado Jive NPL",atual:true}
+],
+cred_resp:"Jive Investments Gestão — Gestora",
+cred_ativo_flag:false,
+cred_desc:"Jive especialista em NPL. Credenciamento foca em cedentes de carteiras inadimplentes e precatórios. Due diligence jurídico especializado.",
+contato:{
+  responsavel:"Jive Investments — Área NPL",
+  cargo:"Gestora",
+  email:"relacionamento@jiveinvestments.com.br",
+  site:"www.jiveinvestments.com.br",
+  endereco:"Av. Brigadeiro Faria Lima, 1.485, 18º Andar — São Paulo/SP",
+  nota:"Fundo Jive puro NPL. Diferente do Jive Bossanova HY (ID 16457). Oliveira Trust Admin independente."
+},
+originadores:[
+  {nome:"Bancos cedentes de carteiras NPL",tipo:"ban",seg:"NPL bancário — inadimplentes",contrato:"Contratos de Cessão",vol:"—",desde:"2022"},
+  {nome:"Empresas com recebíveis distressed",tipo:"emp",seg:"Corporativo distressed",contrato:"Contratos de Cessão",vol:"—",desde:"2022"},
+  {nome:"Cedentes de precatórios",tipo:"emp",seg:"Precatórios federais/estaduais",contrato:"Cessão de precatórios",vol:"—",desde:"2023"}
+],
+vol:[],
+obs:"Fundo Jive puro NPL. Diferente do ID 16457 (Jive Bossanova HY)."},
+
+{id:18207,
+nome:"POLO CAPITAL CRÉDITO PRIVADO FIDC",
+cnpj:"—",
+data:'2022-06',fase:'2r',cred_ativo:false,tem_reg:true,
+admin:"Singulare CTVM S.A.",admin_cnpj:"62.285.390/0001-40",
+gestor:"Polo Capital Gestão",gestor_cnpj:"—",
+custodiante:"Singulare",
+segmento:"Middle Market / Crédito Corporativo",prazo:"Determinado",
+series:"Sênior / Subordinada",
+total_docs:18,n_reg:2,n_inf:12,n_ato:4,ultima:'2024-12',
+url:"https://fnet.bmfbovespa.com.br/fnet/publico/abrirGerenciadorDocumentosCVM",
+captacao:[
+  {r:"Constituição",v:"R$ 5M",p:"jun/2022",d:"Capital fundadores Polo Capital",atual:false},
+  {r:"1ª Rodada",v:"R$ 40M",p:"2022",d:"Captação inaugural middle market",atual:false},
+  {r:"2ª Rodada",v:"R$ 100M",p:"2023–2024",d:"Expansão portfólio setorial",atual:false},
+  {r:"Saldo Atual",v:"~R$ 115M",p:"dez/2024",d:"PL estimado",atual:true}
+],
+cred_resp:"Polo Capital Gestão — Gestora",
+cred_ativo_flag:false,
+cred_desc:"Polo Capital conduz credenciamento focado em middle market. Análise setorial e financeira antes de cada cessão.",
+contato:{
+  responsavel:"Polo Capital — Mesa de Crédito",
+  cargo:"Gestora",
+  email:"contato@polocapital.com.br",
+  site:"www.polocapital.com.br",
+  endereco:"São Paulo/SP",
+  nota:"Foco middle market. Singulare Admin independente."
+},
+originadores:[
+  {nome:"Empresas Middle Market",tipo:"emp",seg:"Middle Market / Recebíveis",contrato:"Contratos de Cessão",vol:"—",desde:"2022"},
+  {nome:"Agro cedentes",tipo:"emp",seg:"Agronegócio / CPR / CRA",contrato:"Contratos ativos",vol:"—",desde:"2023"},
+  {nome:"Empresas de serviços (NF-e)",tipo:"emp",seg:"Serviços / Recebíveis NF-e",contrato:"Contratos vigentes",vol:"—",desde:"2023"}
+],
+vol:[],
+obs:"Polo Capital foco middle market. Singulare Admin independente."},
+
+{id:18517,
+nome:"OURO PRETO CRÉDITO PRIVADO FIDC",
+cnpj:"—",
+data:'2023-02',fase:'1r',cred_ativo:false,tem_reg:true,
+admin:"A confirmar",admin_cnpj:"—",
+gestor:"Ouro Preto Investimentos",gestor_cnpj:"—",
+custodiante:"—",
+segmento:"Crédito Privado",prazo:"—",
+series:"Sênior / Subordinada",
+total_docs:14,n_reg:2,n_inf:9,n_ato:3,ultima:'2024-10',
+url:"https://fnet.bmfbovespa.com.br/fnet/publico/abrirGerenciadorDocumentosCVM",
+captacao:[
+  {r:"Constituição",v:"R$ 2M",p:"fev/2023",d:"Capital inaugural",atual:false},
+  {r:"1ª Rodada",v:"R$ 25M",p:"2023",d:"Captação inicial",atual:false},
+  {r:"Saldo Atual",v:"~R$ 35M",p:"out/2024",d:"1ª rodada em andamento",atual:true}
+],
+cred_resp:"Ouro Preto Investimentos — Gestora",
+cred_ativo_flag:false,
+cred_desc:"Ouro Preto como Gestora é responsável pelo credenciamento. Due diligence padrão e aprovação em comitê.",
+contato:{
+  responsavel:"Ouro Preto Investimentos — Equipe de Crédito",
+  cargo:"Gestora",
+  email:"contato@ouropretoinvest.com.br",
+  site:"—",
+  endereco:"São Paulo/SP",
+  nota:"CEO João Peixoto Neto. Contatar para detalhes de originadores."
+},
+originadores:[
+  {nome:"Carteira Ouro Preto",tipo:"out",seg:"Crédito privado diversificado",contrato:"Contratos de Cessão",vol:"—",desde:"2023"},
+  {nome:"Fintechs parceiras (não identificadas)",tipo:"fin",seg:"Crédito digital / PME",contrato:"Em análise",vol:"—",desde:"2023"}
+],
+vol:[],
+obs:"CEO: João Peixoto Neto. Em 1ª rodada."},
+
+{id:23954,
+nome:"TIVIT FIDC CRÉDITO PRIVADO",
+cnpj:"—",
+data:'2024-05',fase:'ini',cred_ativo:false,tem_reg:true,
+admin:"A confirmar",admin_cnpj:"—",
+gestor:"A confirmar",gestor_cnpj:"—",
+custodiante:"—",
+segmento:"Crédito Corporativo / Tech",prazo:"—",
+series:"—",
+total_docs:8,n_reg:1,n_inf:5,n_ato:2,ultima:'2024-11',
+url:"https://fnet.bmfbovespa.com.br/fnet/publico/abrirGerenciadorDocumentosCVM",
+captacao:[
+  {r:"Constituição",v:"Desconhecido",p:"mai/2024",d:"Dados incompletos",atual:false},
+  {r:"Saldo Atual",v:"A confirmar",p:"nov/2024",d:"Verificar regulamento ID 23954",atual:true}
+],
+cred_resp:"A confirmar via regulamento",
+cred_ativo_flag:false,
+cred_desc:"⚠ Dados incompletos. Verificar regulamento via Fundos.NET ID 23954.",
+contato:{responsavel:"A confirmar",cargo:"—",email:"—",site:"—",endereco:"—",nota:"⚠ Confirmar nome e partes via Fundos.NET ID 23954."},
+originadores:[{nome:"A confirmar",tipo:"out",seg:"Corporativo / Tech",contrato:"A confirmar",vol:"—",desde:"2024"}],
+vol:[],
+obs:"⚠ Dados incompletos. Nome 'TIVIT' estimado — confirmar via ID 23954."}
+
+];
+
+// ─── HELPERS ───────────────────────────────────────────────────
+const FL={pre:'⏸ Pré-op',ini:'🌱 Início','1r':'🔄 1ª Rodada','2r':'📈 2ª Rodada',mat:'✅ Maduro'};
+const FC={pre:'f-pre',ini:'f-ini','1r':'f-1r','2r':'f-2r',mat:'f-mat'};
+const TC={fin:'ot-fin',ban:'ot-ban',emp:'ot-emp',ges:'ot-ges',out:'ot-out'};
+const TL={fin:'fintech',ban:'banco',emp:'empresa',ges:'gestora',out:'outros'};
+function fmtD(d){if(!d||d==='—')return'—';const[y,m]=d.split('-');const M=['','jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];return`${M[parseInt(m)||0]}/${y}`;}
+function ano(d){return d?parseInt(d):0;}
+
+let view='grid',filter='todos',sortNew=true;
+
+function getFiltered(){
+  const q=(document.getElementById('search').value||'').toLowerCase();
+  const af=document.getElementById('filtro-ano').value;
+  return F.filter(f=>{
+    const src=[f.nome,f.admin,f.gestor,f.segmento,...f.originadores.map(o=>o.nome+' '+o.seg),f.cred_desc].join(' ').toLowerCase();
+    const mq=!q||src.includes(q);
+    const fa=ano(f.data.substring(0,4));
+    const ma=!af||(af==='2018'?fa<=2018:af==='2025'?fa>=2025:fa===parseInt(af));
+    const mf=filter==='todos'||(filter==='cred-ativo'&&f.cred_ativo)||(filter==='com-orig'&&f.originadores.length>0)||(filter==='novos'&&f.data>='2025-09')||(filter==='ini'&&f.fase==='ini')||(filter==='cap'&&(f.fase==='1r'||f.fase==='2r'))||(filter==='mat'&&f.fase==='mat');
+    return mq&&ma&&mf;
+  }).sort((a,b)=>sortNew?b.data.localeCompare(a.data):a.data.localeCompare(b.data));
+}
+
+function setView(v){view=v;document.getElementById('bg').classList.toggle('on',v==='grid');document.getElementById('bl').classList.toggle('on',v==='list');render();}
+function setFilter(f,btn){filter=f;document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));btn&&btn.classList.add('on');render();}
+function toggleSort(){sortNew=!sortNew;const b=document.getElementById('sbtn');b.textContent=sortNew?'📅 Mais Novos':'📅 Mais Antigos';b.classList.toggle('on',!sortNew);render();}
+
+function render(){
+  const funds=getFiltered();
+  document.getElementById('cnt').textContent=funds.length;
+  const el=document.getElementById('list');
+  if(!funds.length){el.className='';el.innerHTML='<div class="nodata">🔍 Nenhum fundo encontrado</div>';return;}
+  el.className=view==='grid'?'grid':'list';
+  el.innerHTML=funds.map((f,i)=>{
+    const isNovo=f.data>='2025-09';
+    const pl=f.captacao.find(c=>c.atual);
+    const d=`${(i*.03).toFixed(2)}s`;
+    if(view==='grid') return `
+<div class="card${isNovo?' card-novo':''}${f.cred_ativo?' cred-ativo':''}" onclick="openModal(${f.id})" style="animation-delay:${d}">
+  <div class="ctop">
+    <span class="cid">ID ${f.id}</span>
+    <div class="cbadges">
+      <span class="fase ${FC[f.fase]}">${FL[f.fase]}</span>
+      ${isNovo?'<span class="badge-novo">🆕 NOVO</span>':''}
+      ${f.cred_ativo?'<span class="badge-cred">🔴 Captando</span>':''}
+    </div>
+  </div>
+  <div class="cname">${f.nome}</div>
+  <div class="cmeta">📅 ${fmtD(f.data)} · ${f.originadores.length} orig.</div>
+  <div class="ctags">
+    ${f.admin&&f.admin!=='A confirmar'?`<span class="ctag ctag-a">🏦 ${f.admin.substring(0,24)}</span>`:''}
+    ${f.gestor?`<span class="ctag ctag-g">⚙ ${f.gestor.substring(0,20)}</span>`:''}
+    ${f.segmento?`<span class="ctag ctag-s">${f.segmento.substring(0,22)}</span>`:''}
+  </div>
+  ${pl?`<div class="cpl"><div class="cpl-label">Saldo / PL Atual</div><div class="cpl-val">${pl.v}</div><div class="cpl-sub">${pl.p} · ${f.captacao.filter(c=>!c.atual).length} rod.</div></div>`:''}
+  <div class="cmetrics">
+    <div class="cmet"><div class="cmet-v ${f.total_docs>30?'g':''}">${f.total_docs}</div><div class="cmet-l">DOCS</div></div>
+    <div class="cmet"><div class="cmet-v o">${f.originadores.length}</div><div class="cmet-l">ORIG.</div></div>
+    <div class="cmet"><div class="cmet-v">${f.n_inf}</div><div class="cmet-l">INFORM.</div></div>
+    <div class="cmet"><div class="cmet-v y">${f.captacao.length}</div><div class="cmet-l">RODADAS</div></div>
+  </div>
+  ${f.originadores.length>0?`<div class="corig"><div class="corig-label">Originadores</div>${f.originadores.slice(0,2).map(o=>`<span class="chip">${o.nome.substring(0,26)}</span>`).join('')}${f.originadores.length>2?`<span class="chip">+${f.originadores.length-2}</span>`:''}</div>`:''}
+</div>`;
+    return `<div class="litem${isNovo?' card-novo':''}${f.cred_ativo?' cred-ativo':''}" onclick="openModal(${f.id})" style="animation-delay:${d}">
+  <div class="lnum">${i+1}</div>
+  <div class="linfo"><div class="lname">${isNovo?'🆕 ':''}${f.cred_ativo?'🔴 ':''}${f.nome}</div><div class="lsub">📅 ${fmtD(f.data)} · ${f.gestor||'—'}</div></div>
+  <div class="lright"><span class="fase ${FC[f.fase]}">${FL[f.fase]}</span><span style="font-size:9px;color:var(--muted);font-family:'DM Mono'">${f.originadores.length} orig.</span></div>
+</div>`;
+  }).join('');
+}
+
+function openModal(id){
+  const f=F.find(x=>x.id===id);
+  if(!f)return;
+  const isNovo=f.data>='2025-09';
+
+  const timeline=f.captacao.map((c,i)=>`
+<div class="cap-item">
+  <div class="cap-line">
+    <div class="cap-dot ${c.atual?'current':'done'}"></div>
+    ${i<f.captacao.length-1?'<div class="cap-vline"></div>':''}
+  </div>
+  <div class="cap-content ${c.atual?'current':''}">
+    <div class="cap-rodada">${c.r}</div>
+    <div class="cap-valor">${c.v}</div>
+    <div class="cap-periodo">📅 ${c.p}</div>
+    <div class="cap-desc">${c.d}</div>
+  </div>
+</div>`).join('');
+
+  const origRows=f.originadores.length
+    ?f.originadores.map(o=>`<tr>
+  <td><strong>${o.nome}</strong></td>
+  <td><span class="otype ${TC[o.tipo]||'ot-out'}">${TL[o.tipo]||o.tipo}</span></td>
+  <td style="color:var(--muted);font-size:10px">${o.seg}</td>
+  <td style="color:var(--muted);font-size:10px">${o.contrato}</td>
+  <td style="font-family:'DM Mono';font-size:10px;color:var(--ac4)">${o.vol||'—'}</td>
+  <td style="font-family:'DM Mono';font-size:10px;color:var(--muted)">${o.desde}</td>
+</tr>`).join('')
+    :`<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:18px;font-size:11px">⚠ Originadores não identificados. Verificar regulamento ou contatar a Gestora.</td></tr>`;
+
+  const volSec=f.vol&&f.vol.length?`
+<div class="sec">
+  <div class="stitle">📈 Volume de Produção por Originadora (Estimado)</div>
+  <div class="tscroll">
+    <table class="vtable">
+      <thead><tr><th>Originadora</th><th>2023</th><th>2024</th><th>2025</th><th>% Fundo</th></tr></thead>
+      <tbody>${f.vol.map(v=>`<tr>
+        <td><strong>${v.o}</strong></td>
+        <td class="vnum">${v.v2023}</td>
+        <td class="vnum">${v.v2024}</td>
+        <td class="vnumhi">${v.v2025}</td>
+        <td><span class="vpct">${v.pct}</span></td>
+      </tr>`).join('')}</tbody>
+    </table>
+    <div class="vnota">* Volumes estimados com base em informes periódicos CVM e dados públicos. Não constituem informação oficial.</div>
+  </div>
+</div>`:'';
+
+  const ct=f.contato||{};
+  const contatoSec=`
+<div class="sec">
+  <div class="stitle">📞 Contato para Credenciamento de Originadores</div>
+  <div class="contato-box${!ct.email||ct.email==='—'?' full-w':''}">
+    <div class="contato-item">
+      <span class="contato-label">Responsável pelo Credenciamento</span>
+      <span class="contato-val">${ct.responsavel||'—'}</span>
+      <span class="contato-cargo">${ct.cargo||'—'}</span>
+    </div>
+    <div class="contato-item">
+      <span class="contato-label">Contato</span>
+      ${ct.email&&ct.email!=='—'?`<a class="contato-val link" href="mailto:${ct.email}">${ct.email}</a>`:'<span class="contato-val" style="color:var(--muted)">Não divulgado</span>'}
+      ${ct.site&&ct.site!=='—'?`<a class="contato-val link" href="https://${ct.site}" target="_blank" style="font-size:11px">${ct.site}</a>`:''}
+    </div>
+    <div class="contato-item full-w" style="grid-column:1/-1">
+      <span class="contato-label">Endereço</span>
+      <span class="contato-val" style="font-size:11px;color:var(--muted)">${ct.endereco||'—'}</span>
+    </div>
+    <div class="contato-item" style="grid-column:1/-1;background:rgba(0,212,255,.05);border:1px solid rgba(0,212,255,.15);border-radius:8px;padding:8px 10px">
+      <span class="contato-label">Nota</span>
+      <span class="contato-val" style="font-size:11px;color:${f.cred_ativo?'#ff6b6b':'var(--ac3)'}">${ct.nota||'—'}</span>
+    </div>
+  </div>
+</div>`;
+
+  document.getElementById('mc').innerHTML=`
+<div class="mhead">
+  <button class="mback" onclick="closeModal()">← Voltar</button>
+  <div class="mtitle">${isNovo?'🆕 ':''}${f.nome}</div>
+  <div class="mmeta">
+    <span class="fase ${FC[f.fase]}">${FL[f.fase]}</span>
+    <span class="cid">ID ${f.id}</span>
+    <span class="cid">📅 ${fmtD(f.data)}</span>
+    ${f.cnpj&&f.cnpj!=='—'?`<span class="cid">${f.cnpj}</span>`:''}
+    ${isNovo?'<span class="badge-novo">🆕 NOVO 2025-2026</span>':''}
+    ${f.cred_ativo?'<span class="badge-cred">🔴 Captando Originadores</span>':''}
+    ${f.tem_reg&&f.url?`<a class="mlink" href="${f.url}" target="_blank">📄 Fundos.NET ↗</a>`:''}
+  </div>
+</div>
+<div class="mbody">
+
+  <div class="sec">
+    <div class="stitle">🏛 Prestadores de Serviços Essenciais</div>
+    <div class="igrid">
+      <div class="iblock">
+        <div class="ilabel">Administradora</div>
+        <div class="ival ac">${f.admin||'—'}</div>
+        ${f.admin_cnpj&&f.admin_cnpj!=='—'?`<div class="ival-sub">CNPJ: ${f.admin_cnpj}</div>`:''}
+      </div>
+      <div class="iblock">
+        <div class="ilabel">Gestora ⭐ (credencia originadores)</div>
+        <div class="ival g">${f.gestor||'—'}</div>
+        ${f.gestor_cnpj&&f.gestor_cnpj!=='—'?`<div class="ival-sub">CNPJ: ${f.gestor_cnpj}</div>`:''}
+      </div>
+      <div class="iblock">
+        <div class="ilabel">Custodiante</div>
+        <div class="ival">${f.custodiante||'—'}</div>
+      </div>
+      <div class="iblock">
+        <div class="ilabel">Segmento</div>
+        <div class="ival y" style="font-size:11px">${f.segmento||'—'}</div>
+      </div>
+      <div class="iblock">
+        <div class="ilabel">Séries / Cotas</div>
+        <div class="ival" style="font-size:11px">${f.series||'—'}</div>
+      </div>
+      <div class="iblock">
+        <div class="ilabel">Prazo / CNPJ Fundo</div>
+        <div class="ival" style="font-size:11px">${f.prazo||'—'}</div>
+        ${f.cnpj&&f.cnpj!=='—'?`<div class="ival-sub">CNPJ: ${f.cnpj}</div>`:''}
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="stitle">📅 Jornada de Captação de Recursos</div>
+    <div class="cap-timeline">${timeline}</div>
+  </div>
+
+  <div class="sec">
+    <div class="stitle">🔑 Quem Credencia Originadores</div>
+    <div class="credbox ${f.cred_ativo_flag?'ativo':''}">
+      <div class="cred-icon">${f.cred_ativo_flag?'🔴':'🔑'}</div>
+      <div>
+        <div class="credresp ${f.cred_ativo_flag?'ativo':''}">${f.cred_resp}</div>
+        <div class="creddesc">${f.cred_desc}</div>
+      </div>
+    </div>
+  </div>
+
+  ${contatoSec}
+
+  <div class="sec">
+    <div class="stitle">🤝 Originadores / Cedentes Contratados</div>
+    <div class="tscroll">
+      <table class="otable">
+        <thead><tr><th>Originador / Cedente</th><th>Tipo</th><th>Segmento</th><th>Contrato</th><th>Vol. Anual</th><th>Desde</th></tr></thead>
+        <tbody>${origRows}</tbody>
+      </table>
+    </div>
+  </div>
+
+  ${volSec}
+
+  <div class="sec">
+    <div class="stitle">📊 Atividade Fundos.NET</div>
+    <div class="docrow">
+      <div class="dcnt"><div class="dcn">${f.total_docs}</div><div class="dcl">Total Docs</div></div>
+      <div class="dcnt"><div class="dcn" style="color:var(--ac3)">${f.n_reg}</div><div class="dcl">Regulamentos</div></div>
+      <div class="dcnt"><div class="dcn" style="color:var(--ac4)">${f.n_inf}</div><div class="dcl">Informes</div></div>
+      <div class="dcnt"><div class="dcn" style="color:var(--ac2)">${f.n_ato}</div><div class="dcl">Atos</div></div>
+    </div>
+    ${f.ultima&&f.ultima!=='—'?`<div style="margin-top:8px;font-size:10px;color:var(--muted);font-family:'DM Mono'">Última entrega: ${fmtD(f.ultima)}</div>`:''}
+  </div>
+
+  <div class="sec">
+    <div class="stitle">📝 Observações</div>
+    <div class="iblock full"><div class="ival" style="font-size:11px;line-height:1.6;color:var(--muted)">${f.obs||'—'}</div></div>
+  </div>
+
+</div>`;
+
+  document.getElementById('ov').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeModal(){
+  document.getElementById('ov').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+document.getElementById('ov').addEventListener('click',function(e){if(e.target===this)closeModal();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+render();
+</script>
+</body>
+</html>
